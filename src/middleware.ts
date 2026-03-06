@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+// This file is intentionally empty.
+// Route protection is handled by src/proxy.ts (Next.js 16 convention).
 
-const COOKIE = 'sqas_token';
 
 function decodeJwtPayload(token: string): Record<string, unknown> | null {
   try {
