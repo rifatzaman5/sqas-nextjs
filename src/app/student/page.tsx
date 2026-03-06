@@ -1,4 +1,4 @@
-﻿import { getSession } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabase';
 import Link from 'next/link';
 import { FaCircleCheck, FaCalendarDays, FaLayerGroup, FaGraduationCap, FaCamera, FaChartBar } from 'react-icons/fa6';
@@ -19,7 +19,7 @@ export default async function StudentDashboard() {
       <div className="mb-6">
         <h1 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-100">Welcome, {student?.name}</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
-          {student?.enrollment_no} Â· Batch {student?.batch} Â· Sem {student?.semester} Â· University of Sargodha
+          {student?.enrollment_no} · Batch {student?.batch} · Sem {student?.semester} · University of Sargodha
         </p>
       </div>
 
@@ -28,8 +28,8 @@ export default async function StudentDashboard() {
         {[
           { icon: <FaCircleCheck className="text-white text-lg" />, value: totalAtt || 0, label: 'Total Present', bg: 'bg-emerald-500' },
           { icon: <FaCalendarDays className="text-white text-lg" />, value: todayAtt || 0, label: "Today's Classes", bg: 'bg-blue-500' },
-          { icon: <FaLayerGroup className="text-white text-lg" />, value: student?.semester || 'â€”', label: 'Semester', bg: 'bg-violet-500' },
-          { icon: <FaGraduationCap className="text-white text-lg" />, value: student?.batch || 'â€”', label: 'Batch', bg: 'bg-orange-500' },
+          { icon: <FaLayerGroup className="text-white text-lg" />, value: student?.semester || '—', label: 'Semester', bg: 'bg-violet-500' },
+          { icon: <FaGraduationCap className="text-white text-lg" />, value: student?.batch || '—', label: 'Batch', bg: 'bg-orange-500' },
         ].map(item => (
           <div key={item.label} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
             <div className={`inline-flex items-center justify-center w-10 h-10 ${item.bg} rounded-xl mb-3`}>{item.icon}</div>

@@ -53,7 +53,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">SQAS</h1>
           <p className="text-slate-400 text-sm mt-1">Smart Attendance System</p>
-          <p className="text-slate-500 text-xs mt-0.5">University of Sargodha &ndash; Dept. of IT</p>
+          <p className="text-slate-500 text-xs mt-0.5">University of Sargodha — Dept. of IT</p>
         </div>
 
         {/* Card */}
