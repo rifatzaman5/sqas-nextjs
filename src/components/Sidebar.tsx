@@ -3,10 +3,12 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTheme } from '@/hooks/useTheme';
 import {
   FaHouse, FaGraduationCap, FaChalkboardUser, FaBook,
   FaCalendarDays, FaClipboardList, FaGear, FaQrcode,
-  FaCamera, FaRightFromBracket, FaBars, FaXmark, FaShieldHalved
+  FaCamera, FaRightFromBracket, FaBars, FaXmark, FaShieldHalved,
+  FaSun, FaMoon
 } from 'react-icons/fa6';
 
 interface NavItem { href: string; label: string; icon: React.ReactNode; }
@@ -45,6 +47,7 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { isDark, toggle: toggleTheme } = useTheme();
   const nav = navMap[role];
   const cfg = roleConfig[role];
 
@@ -91,12 +94,21 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
             <p className="text-white/55 text-[10px] leading-none mt-0.5 truncate max-w-[140px]">{name}</p>
           </div>
         </div>
-        <button
-          onClick={() => setOpen(true)}
-          className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white"
-        >
-          <FaBars size={15} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white"
+            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDark ? <FaSun size={14} /> : <FaMoon size={14} />}
+          </button>
+          <button
+            onClick={() => setOpen(true)}
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white"
+          >
+            <FaBars size={15} />
+          </button>
+        </div>
       </header>
 
       {/* â”€â”€ Mobile overlay â”€â”€ */}
@@ -169,6 +181,13 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
         </div>
         <NavLinks />
         <div className="p-3 border-t border-white/10">
+          <button
+            onClick={toggleTheme}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all mb-1"
+          >
+            {isDark ? <FaSun className="text-white/50 text-base" /> : <FaMoon className="text-white/50 text-base" />}
+            {isDark ? 'Light Mode' : 'Dark Mode'}
+          </button>
           <button
             onClick={logout}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all"

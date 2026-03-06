@@ -77,13 +77,13 @@ export default function AdminAttendancePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Attendance Records</h1>
-          <p className="text-gray-500 text-sm">{filtered.length} records shown{records.length !== filtered.length ? ` (${records.length} total)` : ''}</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Attendance Records</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">{filtered.length} records shown{records.length !== filtered.length ? ` (${records.length} total)` : ''}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setAutoRefresh(v => !v)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${autoRefresh ? 'bg-green-600 text-white border-green-600' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${autoRefresh ? 'bg-green-600 text-white border-green-600' : 'border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
           >
             <FaArrowsRotate className={autoRefresh ? 'animate-spin text-xs' : 'text-xs'} />
             {autoRefresh ? 'Live (10s)' : 'Auto-refresh'}
@@ -102,9 +102,9 @@ export default function AdminAttendancePage() {
       {Object.keys(subjectStats).length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {Object.values(subjectStats).map(s => (
-            <span key={s.code} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
+            <span key={s.code} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
               <span className="font-mono">{s.code}</span>
-              <span className="bg-blue-200 text-blue-800 rounded-full px-1.5 py-0.5 text-xs font-bold">{s.count}</span>
+              <span className="bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-full px-1.5 py-0.5 text-xs font-bold">{s.count}</span>
             </span>
           ))}
         </div>
@@ -116,63 +116,63 @@ export default function AdminAttendancePage() {
           type="date"
           value={filter.date}
           onChange={e => setFilter({ ...filter, date: e.target.value })}
-          className="px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 bg-white"
+          className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         />
         <input
           type="text"
           placeholder="Filter by subject…"
           value={filter.subject}
           onChange={e => setFilter({ ...filter, subject: e.target.value })}
-          className="flex-1 min-w-[140px] px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 bg-white"
+          className="flex-1 min-w-[140px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         />
         <input
           type="text"
           placeholder="Filter by student / enrollment…"
           value={filter.student}
           onChange={e => setFilter({ ...filter, student: e.target.value })}
-          className="flex-1 min-w-[160px] px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 bg-white"
+          className="flex-1 min-w-[160px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         />
         {(filter.date || filter.subject || filter.student) && (
           <button
             onClick={() => setFilter({ date: '', subject: '', student: '' })}
-            className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800 border border-slate-300 rounded-xl bg-white"
+            className="px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800"
           >
             Clear
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
         {loading ? (
-          <div className="text-center py-12 text-gray-400">Loading…</div>
+          <div className="text-center py-12 text-slate-400 dark:text-slate-500">Loading…</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+              <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 uppercase text-xs">
                 <tr>
                   {['Date', 'Student', 'Enrollment', 'Subject', 'Teacher', 'Time', 'Status'].map(h => (
                     <th key={h} className="px-4 py-3 text-left font-medium whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                 {filtered.map(r => (
-                  <tr key={r.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{r.date}</td>
-                    <td className="px-4 py-3 text-gray-800 whitespace-nowrap">{r.students?.name}</td>
-                    <td className="px-4 py-3 font-mono text-blue-600 text-xs whitespace-nowrap">{r.students?.enrollment_no}</td>
-                    <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
-                      {r.subjects?.name} <span className="text-gray-400 text-xs">({r.subjects?.code})</span>
+                  <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.date}</td>
+                    <td className="px-4 py-3 text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.students?.name}</td>
+                    <td className="px-4 py-3 font-mono text-blue-600 dark:text-blue-400 text-xs whitespace-nowrap">{r.students?.enrollment_no}</td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                      {r.subjects?.name} <span className="text-slate-400 dark:text-slate-500 text-xs">({r.subjects?.code})</span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600 text-xs whitespace-nowrap">{r.teachers?.name}</td>
-                    <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">{r.timetable?.start_time}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs whitespace-nowrap">{r.teachers?.name}</td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">{r.timetable?.start_time}</td>
                     <td className="px-4 py-3">
-                      <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{r.status}</span>
+                      <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{r.status}</span>
                     </td>
                   </tr>
                 ))}
                 {!filtered.length && (
-                  <tr><td colSpan={7} className="text-center py-10 text-gray-400">No attendance records found</td></tr>
+                  <tr><td colSpan={7} className="text-center py-10 text-slate-400 dark:text-slate-500">No attendance records found</td></tr>
                 )}
               </tbody>
             </table>

@@ -130,30 +130,30 @@ export default function TakeAttendancePage() {
   return (
     <div className="p-4 md:p-6 lg:p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Take Attendance</h1>
-        <p className="text-gray-500 text-sm">Select a class, generate QR — students scan to mark attendance</p>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Take Attendance</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Select a class, generate QR — students scan to mark attendance</p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left: Timetable selector */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-700">Your Classes</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
+            <h2 className="font-semibold text-slate-700 dark:text-slate-200">Your Classes</h2>
           </div>
-          <div className="divide-y divide-gray-50 max-h-[440px] overflow-y-auto">
+          <div className="divide-y divide-slate-50 dark:divide-slate-700 max-h-[440px] overflow-y-auto">
             {DAYS.map(day => (
               grouped[day]?.length ? (
                 <div key={day}>
-                  <p className="px-5 py-2 text-xs font-semibold text-gray-400 uppercase bg-gray-50 sticky top-0">{day}</p>
+                  <p className="px-5 py-2 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase bg-slate-50 dark:bg-slate-700/50 sticky top-0">{day}</p>
                   {grouped[day].map(slot => (
                     <div
                       key={slot.id}
                       onClick={() => { setSelected(slot); setQrToken(''); setExpiresAt(null); setAttendees([]); stopPolling(); }}
-                      className={`flex items-center gap-3 px-5 py-3 cursor-pointer hover:bg-blue-50 transition-colors ${selected?.id === slot.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''}`}
+                      className={`flex items-center gap-3 px-5 py-3 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${selected?.id === slot.id ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500' : ''}`}
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-800 truncate">{slot.subjects?.name} <span className="text-xs text-gray-400">({slot.subjects?.code})</span></p>
-                        <p className="text-xs text-gray-500">{slot.start_time}–{slot.end_time} · {slot.room} · Batch {slot.batch}</p>
+                        <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{slot.subjects?.name} <span className="text-xs text-slate-400 dark:text-slate-500">({slot.subjects?.code})</span></p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{slot.start_time}–{slot.end_time} · {slot.room} · Batch {slot.batch}</p>
                       </div>
                       {selected?.id === slot.id && <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />}
                     </div>
@@ -161,20 +161,20 @@ export default function TakeAttendancePage() {
                 </div>
               ) : null
             ))}
-            {!slots.length && <p className="text-center py-8 text-gray-400 text-sm">No timetable assigned</p>}
+            {!slots.length && <p className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">No timetable assigned</p>}
           </div>
         </div>
 
         {/* Right: QR + live count */}
         <div className="flex flex-col gap-4">
           {/* QR Panel */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col items-center p-6">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center p-6">
             {!qrToken ? (
               <div className="flex flex-col items-center justify-center gap-4 py-6 w-full">
                 <div className="w-24 h-24 bg-slate-100 rounded-2xl flex items-center justify-center">
                   <FaQrcode className="text-5xl text-slate-300" />
                 </div>
-                <p className="text-gray-500 text-sm text-center">
+                <p className="text-slate-500 dark:text-slate-400 text-sm text-center">
                   {selected ? `Ready for ${selected.subjects?.name}` : 'Select a class first'}
                 </p>
                 <button
@@ -189,8 +189,8 @@ export default function TakeAttendancePage() {
             ) : (
               <div className="w-full flex flex-col items-center">
                 <div className="text-center mb-3">
-                  <p className="font-semibold text-gray-800">{selected?.subjects?.name}</p>
-                  <p className="text-sm text-gray-500">{selected?.day} · {selected?.start_time}–{selected?.end_time} · {selected?.room}</p>
+                  <p className="font-semibold text-slate-800 dark:text-slate-100">{selected?.subjects?.name}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{selected?.day} · {selected?.start_time}–{selected?.end_time} · {selected?.room}</p>
                 </div>
 
                 {/* Timer */}
@@ -219,9 +219,9 @@ export default function TakeAttendancePage() {
                 </div>
 
                 {/* Manual code */}
-                <div className="w-full bg-gray-50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-gray-400 mb-1">Manual entry code:</p>
-                  <p className="font-mono text-xs text-gray-700 break-all select-all">{qrToken}</p>
+                  <div className="w-full bg-slate-50 dark:bg-slate-700 rounded-lg p-3 text-center">
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">Manual entry code:</p>
+                    <p className="font-mono text-xs text-slate-700 dark:text-slate-300 break-all select-all">{qrToken}</p>
                 </div>
               </div>
             )}
@@ -229,33 +229,33 @@ export default function TakeAttendancePage() {
 
           {/* Live Attendees Panel */}
           {qrToken && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <h3 className="font-semibold text-gray-700 text-sm">Live Attendance</h3>
+                  <h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Live Attendance</h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                  <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
                     <FaUsers className="text-xs" /> {liveCount} present
                   </span>
-                  <span className="text-xs text-gray-400">auto-refresh 5s</span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500">auto-refresh 5s</span>
                 </div>
               </div>
               <div className="max-h-56 overflow-y-auto">
                 {attendees.length === 0 ? (
-                  <p className="text-center py-6 text-gray-400 text-sm">Waiting for students to scan…</p>
+                  <p className="text-center py-6 text-slate-400 dark:text-slate-500 text-sm">Waiting for students to scan…</p>
                 ) : (
-                  <div className="divide-y divide-gray-50">
+                  <div className="divide-y divide-slate-50 dark:divide-slate-700">
                     {attendees.map((a, i) => (
                       <div key={a.id} className="flex items-center gap-3 px-5 py-2.5">
-                        <span className="text-xs text-gray-400 w-5">{i + 1}</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500 w-5">{i + 1}</span>
                         <FaCircleCheck className="text-green-500 text-sm flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-800 truncate">{a.students?.name}</p>
-                          <p className="text-xs font-mono text-gray-400">{a.students?.enrollment_no}</p>
+                          <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{a.students?.name}</p>
+                          <p className="text-xs font-mono text-slate-400 dark:text-slate-500">{a.students?.enrollment_no}</p>
                         </div>
-                        <span className="text-xs text-gray-400">{new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500">{new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
                     ))}
                   </div>

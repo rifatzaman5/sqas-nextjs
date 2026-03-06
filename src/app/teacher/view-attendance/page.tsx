@@ -71,8 +71,8 @@ export default function TeacherViewAttendancePage() {
     <div className="p-4 md:p-6 lg:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Attendance Records</h1>
-          <p className="text-gray-500 text-sm">{filtered.length} records · {uniqueDates} dates · {uniqueStudents} students</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Attendance Records</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">{filtered.length} records · {uniqueDates} dates · {uniqueStudents} students</p>
         </div>
         <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm hover:bg-emerald-700">
           <FaDownload className="text-xs" /> Export CSV
@@ -80,20 +80,20 @@ export default function TeacherViewAttendancePage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-        <div className="flex items-center gap-2 mb-3 text-sm text-slate-500 font-medium">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4 mb-6">
+        <div className="flex items-center gap-2 mb-3 text-sm text-slate-500 dark:text-slate-400 font-medium">
           <FaFilter className="text-xs" /> Filters
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800" />
+            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700" />
           <select value={filterSubject} onChange={e => setFilterSubject(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white">
+            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700">
             <option value="">All Subjects</option>
             {subjects.map(s => <option key={s.id} value={s.id}>{s.name} ({s.code})</option>)}
           </select>
           <input type="text" placeholder="Search student name / enrollment…" value={searchStudent} onChange={e => setSearchStudent(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800" />
+            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700" />
         </div>
         {(filterDate || filterSubject || searchStudent) && (
           <button onClick={() => { setFilterDate(''); setFilterSubject(''); setSearchStudent(''); }} className="mt-2 text-xs text-red-500 hover:underline">
@@ -103,38 +103,38 @@ export default function TeacherViewAttendancePage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-400">Loading…</div>
+        <div className="text-center py-12 text-slate-400 dark:text-slate-500">Loading…</div>
       ) : (
         <div className="space-y-4">
           {Object.values(grouped).sort((a, b) => b.date.localeCompare(a.date)).map((group, i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-5 py-3 bg-gray-50 border-b border-gray-100 flex flex-wrap items-center justify-between gap-2">
+            <div key={i} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <div className="px-5 py-3 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <span className="font-semibold text-gray-800">{group.subject?.name}</span>
-                  <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded font-mono">{group.subject?.code}</span>
-                  {group.slot && <span className="text-xs text-gray-500">{group.slot.day} · {group.slot.start_time}–{group.slot.end_time} · Batch {group.slot.batch}</span>}
+                  <span className="font-semibold text-slate-800 dark:text-slate-100">{group.subject?.name}</span>
+                  <span className="text-xs bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-mono">{group.subject?.code}</span>
+                  {group.slot && <span className="text-xs text-slate-500 dark:text-slate-400">{group.slot.day} · {group.slot.start_time}–{group.slot.end_time} · Batch {group.slot.batch}</span>}
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-500">{group.date}</span>
-                  <span className="bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">{group.records.length} present</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">{group.date}</span>
+                  <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-0.5 rounded-full text-xs font-semibold">{group.records.length} present</span>
                 </div>
               </div>
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-slate-50 dark:divide-slate-700">
                 {group.records.map((r, ri) => (
                   <div key={r.id} className="flex items-center gap-3 px-5 py-2.5">
-                    <span className="text-xs text-gray-300 w-5">{ri + 1}</span>
+                    <span className="text-xs text-slate-300 dark:text-slate-600 w-5">{ri + 1}</span>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-800">{r.students?.name}</p>
-                      <p className="text-xs text-gray-400 font-mono">{r.students?.enrollment_no}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{r.students?.name}</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 font-mono">{r.students?.enrollment_no}</p>
                     </div>
-                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs">Present</span>
+                    <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded text-xs">Present</span>
                   </div>
                 ))}
               </div>
             </div>
           ))}
           {!Object.keys(grouped).length && (
-            <div className="text-center py-12 text-slate-400">
+            <div className="text-center py-12 text-slate-400 dark:text-slate-500">
               <FaFilter className="text-4xl mx-auto mb-3 opacity-30" />
               <p>No attendance records found</p>
               {(filterDate || filterSubject || searchStudent) && <p className="text-sm mt-1">Try clearing the filters</p>}
