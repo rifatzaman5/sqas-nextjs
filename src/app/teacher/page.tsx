@@ -1,46 +1,59 @@
-import { getSession } from '@/lib/auth';
+﻿import { getSession } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabase';
+import Link from 'next/link';
+import { FaCalendarDays, FaCircleCheck, FaQrcode, FaClipboardList } from 'react-icons/fa6';
 
 async function getTeacherStats(teacherId: number) {
   const today = new Date().toISOString().split('T')[0];
-  const [slotsRes, todayAtt] = await Promise.all([
+  const [slotsRes, todayAtt, totalAtt] = await Promise.all([
     supabaseAdmin.from('timetable').select('id', { count: 'exact', head: true }).eq('teacher_id', teacherId),
     supabaseAdmin.from('attendance').select('id', { count: 'exact', head: true }).eq('teacher_id', teacherId).eq('date', today),
+    supabaseAdmin.from('attendance').select('id', { count: 'exact', head: true }).eq('teacher_id', teacherId),
   ]);
-  return { slots: slotsRes.count || 0, todayAttendance: todayAtt.count || 0 };
+  return { slots: slotsRes.count || 0, todayAttendance: todayAtt.count || 0, total: totalAtt.count || 0 };
 }
 
 export default async function TeacherDashboard() {
   const session = await getSession();
   const stats = await getTeacherStats(Number(session!.id));
 
+  const statCards = [
+    { label: 'Weekly Classes', value: stats.slots, bg: 'bg-blue-500', icon: <FaCalendarDays className="text-white text-lg" /> },
+    { label: "Today's Attendances", value: stats.todayAttendance, bg: 'bg-emerald-500', icon: <FaCircleCheck className="text-white text-lg" /> },
+  ];
+
   return (
-    <div className="p-6 lg:p-8">
-      <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">Welcome, {session!.name}</h1>
-        <p className="text-gray-500 mt-1">University of Sargodha — Dept. of Information Technology</p>
+    <div className="p-4 md:p-6 lg:p-8">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl lg:text-3xl font-bold text-slate-800">Welcome, {session!.name}</h1>
+        <p className="text-slate-500 mt-0.5 text-sm">University of Sargodha â€” Dept. of Information Technology</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-500 rounded-lg mb-3 text-xl">📅</div>
-          <p className="text-3xl font-bold text-gray-800">{stats.slots}</p>
-          <p className="text-sm text-gray-500 mt-1">Weekly Classes</p>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <div className="inline-flex items-center justify-center w-10 h-10 bg-green-500 rounded-lg mb-3 text-xl">✅</div>
-          <p className="text-3xl font-bold text-gray-800">{stats.todayAttendance}</p>
-          <p className="text-sm text-gray-500 mt-1">Today's Attendances</p>
-        </div>
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        {statCards.map(c => (
+          <div key={c.label} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <div className={`inline-flex items-center justify-center w-10 h-10 ${c.bg} rounded-xl mb-3`}>{c.icon}</div>
+            <p className="text-2xl font-bold text-slate-800">{c.value}</p>
+            <p className="text-xs text-slate-500 mt-0.5">{c.label}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="font-semibold text-gray-700 mb-4">Quick Actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <a href="/teacher/take-attendance" className="px-5 py-3 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors">📷 Take Attendance (Generate QR)</a>
-          <a href="/teacher/view-attendance" className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-200 transition-colors">📋 View Attendance Records</a>
+      {/* Quick Actions */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+        <h2 className="font-semibold text-slate-700 mb-3 text-sm">Quick Actions</h2>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link href="/teacher/take-attendance" className="flex items-center gap-3 px-5 py-3 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition-colors">
+            <FaQrcode className="text-lg" /> Generate QR Code
+          </Link>
+          <Link href="/teacher/view-attendance" className="flex items-center gap-3 px-5 py-3 bg-slate-100 text-slate-700 rounded-xl font-medium text-sm hover:bg-slate-200 transition-colors">
+            <FaClipboardList className="text-lg" /> View Attendance Records
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+

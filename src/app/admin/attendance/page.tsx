@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { Download, RefreshCw } from 'lucide-react';
+import { FaDownload, FaArrowsRotate } from 'react-icons/fa6';
 
 interface AttendanceRecord {
   id: number;
@@ -83,17 +83,17 @@ export default function AdminAttendancePage() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setAutoRefresh(v => !v)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${autoRefresh ? 'bg-green-600 text-white border-green-600' : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${autoRefresh ? 'bg-green-600 text-white border-green-600' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}`}
           >
-            <RefreshCw size={14} className={autoRefresh ? 'animate-spin' : ''} />
+            <FaArrowsRotate className={autoRefresh ? 'animate-spin text-xs' : 'text-xs'} />
             {autoRefresh ? 'Live (10s)' : 'Auto-refresh'}
           </button>
           <button
             onClick={() => exportCSV(filtered)}
             disabled={filtered.length === 0}
-            className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 disabled:opacity-50"
           >
-            <Download size={14} /> Export CSV
+            <FaDownload className="text-xs" /> Export CSV
           </button>
         </div>
       </div>
@@ -116,26 +116,26 @@ export default function AdminAttendancePage() {
           type="date"
           value={filter.date}
           onChange={e => setFilter({ ...filter, date: e.target.value })}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white"
+          className="px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 bg-white"
         />
         <input
           type="text"
           placeholder="Filter by subject…"
           value={filter.subject}
           onChange={e => setFilter({ ...filter, subject: e.target.value })}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 w-44 bg-white"
+          className="flex-1 min-w-[140px] px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 bg-white"
         />
         <input
           type="text"
           placeholder="Filter by student / enrollment…"
           value={filter.student}
           onChange={e => setFilter({ ...filter, student: e.target.value })}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 w-52 bg-white"
+          className="flex-1 min-w-[160px] px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 bg-white"
         />
         {(filter.date || filter.subject || filter.student) && (
           <button
             onClick={() => setFilter({ date: '', subject: '', student: '' })}
-            className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg bg-white"
+            className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800 border border-slate-300 rounded-xl bg-white"
           >
             Clear
           </button>

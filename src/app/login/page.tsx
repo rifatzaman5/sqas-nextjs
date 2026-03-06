@@ -1,12 +1,22 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { FaShieldHalved, FaChalkboardUser, FaGraduationCap, FaQrcode, FaEye, FaEyeSlash } from 'react-icons/fa6';
+
+const ROLES = [
+  { key: 'admin',   label: 'Admin',   icon: <FaShieldHalved />,    color: 'bg-indigo-600 hover:bg-indigo-700', ring: 'ring-indigo-400', activeText: 'text-white' },
+  { key: 'teacher', label: 'Teacher', icon: <FaChalkboardUser />,  color: 'bg-blue-600 hover:bg-blue-700',    ring: 'ring-blue-400',    activeText: 'text-white' },
+  { key: 'student', label: 'Student', icon: <FaGraduationCap />,   color: 'bg-emerald-600 hover:bg-emerald-700', ring: 'ring-emerald-400', activeText: 'text-white' },
+] as const;
 
 export default function LoginPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ role: 'admin', username: '', password: '' });
+  const [form, setForm] = useState({ role: 'admin' as 'admin' | 'teacher' | 'student', username: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
+  const activeRole = ROLES.find(r => r.key === form.role)!;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,94 +43,111 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+
+        {/* Logo + heading */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500 rounded-full mb-4 shadow-lg">
-            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-2xl mb-4 text-3xl text-white">
+            <FaQrcode />
           </div>
-          <h1 className="text-3xl font-bold text-white">SQAS</h1>
-          <p className="text-blue-300 text-sm mt-1">Smart Attendance System using QR Scanning</p>
-          <p className="text-slate-400 text-xs mt-1">University of Sargodha — Dept. of Information Technology</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">SQAS</h1>
+          <p className="text-slate-400 text-sm mt-1">Smart Attendance System</p>
+          <p className="text-slate-500 text-xs mt-0.5">University of Sargodha â€” Dept. of IT</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">Sign In to Your Account</h2>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Role selector */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Login As</label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['admin', 'teacher', 'student'] as const).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setForm({ ...form, role: r, username: '', password: '' })}
-                    className={`py-2 px-3 rounded-lg text-sm font-medium capitalize transition-all ${
-                      form.role === r
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    {r === 'admin' ? '🔐 Admin' : r === 'teacher' ? '👨‍🏫 Teacher' : '🎓 Student'}
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          {/* Role selector */}
+          <div className="grid grid-cols-3">
+            {ROLES.map(r => (
+              <button
+                key={r.key}
+                type="button"
+                onClick={() => setForm({ role: r.key, username: '', password: '' })}
+                className={`flex flex-col items-center gap-1.5 py-4 text-xs font-semibold transition-all border-b-2 ${
+                  form.role === r.key
+                    ? 'border-b-2 border-current bg-slate-50 text-slate-800'
+                    : 'border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50/50'
+                }`}
+                style={form.role === r.key ? { borderColor: 'currentColor' } : {}}
+              >
+                <span className={`text-xl ${form.role === r.key ? 'text-slate-700' : 'text-slate-300'}`}>{r.icon}</span>
+                {r.label}
+              </button>
+            ))}
+          </div>
 
-            {/* Username/Enrollment */}
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            {/* Username / Enrollment */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {form.role === 'student' ? 'Enrollment No.' : 'Username'}
+              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                {form.role === 'student' ? 'Enrollment No.' : 'Username / ID'}
               </label>
               <input
                 type="text"
                 value={form.username}
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                placeholder={form.role === 'student' ? 'e.g. 220064' : form.role === 'admin' ? 'admin' : 'teacher_id'}
+                onChange={e => setForm({ ...form, username: e.target.value })}
+                placeholder={form.role === 'student' ? 'e.g. 220064' : form.role === 'admin' ? 'admin' : 'Teacher ID (e.g. 1)'}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                autoComplete="username"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-300 bg-slate-50 placeholder-slate-300 transition"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                placeholder="••••••••"
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-              />
+              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Password</label>
+              <div className="relative">
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={e => setForm({ ...form, password: e.target.value })}
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  required
+                  autoComplete="current-password"
+                  className="w-full px-4 py-3 pr-11 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-300 bg-slate-50 placeholder-slate-300 transition"
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowPass(v => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPass ? <FaEyeSlash size={15} /> : <FaEye size={15} />}
+                </button>
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 rounded-lg transition-colors shadow-md"
+              className={`w-full ${activeRole.color} disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-sm`}
             >
-              {loading ? 'Signing in…' : 'Sign In'}
+              {loading ? (
+                <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />Signing inâ€¦</span>
+              ) : (
+                <span className="flex items-center gap-2">{activeRole.icon} Sign in as {activeRole.label}</span>
+              )}
             </button>
           </form>
 
           {/* Demo credentials */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg text-xs text-blue-700">
-            <p className="font-semibold mb-1">Demo Credentials (password: 123)</p>
-            <p>Admin: <span className="font-mono">admin</span> | Teacher: ID <span className="font-mono">1</span> | Student: <span className="font-mono">220064</span></p>
+          <div className="mx-6 mb-6 p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+            <p className="text-xs font-semibold text-slate-500 mb-1">Demo credentials (password: <span className="font-mono">123</span>)</p>
+            <div className="grid grid-cols-3 gap-1 text-xs text-slate-500">
+              <span>Admin: <span className="font-mono text-slate-700">admin</span></span>
+              <span>Teacher: <span className="font-mono text-slate-700">1</span></span>
+              <span>Student: <span className="font-mono text-slate-700">220064</span></span>
+            </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <p className="text-center text-slate-500 text-xs mt-6">
-          Sania Nawaz • Sania Saeed • Waqar Ali | BSIT Sem 5 · UoS
+        <p className="text-center text-slate-600 text-xs mt-5">
+          Sania Nawaz Â· Sania Saeed Â· Waqar Ali â€” BSIT Sem 5 Â· UoS
         </p>
       </div>
     </div>
   );
 }
+

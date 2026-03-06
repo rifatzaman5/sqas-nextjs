@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, X } from 'lucide-react';
+import { FaPlus, FaTrash, FaXmark } from 'react-icons/fa6';
 
 interface TimetableSlot { id: number; day: string; start_time: string; end_time: string; room: string; batch: string; academic_year: string; subjects?: { name: string; code: string }; teachers?: { name: string }; }
 interface Subject { id: number; name: string; code: string; }
@@ -47,35 +47,35 @@ export default function TimetablePage() {
   const grouped = DAYS.reduce((acc, day) => ({ ...acc, [day]: slots.filter(s => s.day === day) }), {} as Record<string, TimetableSlot[]>);
 
   return (
-    <div className="p-6 lg:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div><h1 className="text-2xl font-bold text-gray-800">Timetable</h1><p className="text-gray-500 text-sm">Academic Year 2025-26</p></div>
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="flex items-center justify-between mb-5">
+        <div><h1 className="text-2xl font-bold text-slate-800">Timetable</h1><p className="text-slate-500 text-sm">Academic Year 2025-26</p></div>
         <div className="flex gap-3">
-          <select value={filterBatch} onChange={e => setFilterBatch(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800">
+          <select value={filterBatch} onChange={e => setFilterBatch(e.target.value)} className="px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 bg-white">
             {['F22', 'F21', 'F20', 'F23'].map(b => <option key={b}>{b}</option>)}
           </select>
-          <button onClick={() => { setForm({ ...empty, subject_id: subjects[0]?.id?.toString() || '', teacher_id: teachers[0]?.id?.toString() || '' }); setModal(true); }} className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm font-medium"><Plus size={16} />Add Slot</button>
+          <button onClick={() => { setForm({ ...empty, subject_id: subjects[0]?.id?.toString() || '', teacher_id: teachers[0]?.id?.toString() || '' }); setModal(true); }} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 text-sm font-medium"><FaPlus className="text-xs" />Add Slot</button>
         </div>
       </div>
 
       <div className="space-y-4">
         {DAYS.map(day => (
-          <div key={day} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-3 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-700">{day}</h3>
-              <span className="text-sm text-gray-400">{grouped[day]?.length || 0} classes</span>
+          <div key={day} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="px-5 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-semibold text-slate-700">{day}</h3>
+              <span className="text-sm text-slate-400">{grouped[day]?.length || 0} classes</span>
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-slate-50">
               {(grouped[day] || []).map(slot => (
                 <div key={slot.id} className="px-5 py-3 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span className="text-sm font-mono text-blue-600 w-24">{slot.start_time} – {slot.end_time}</span>
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{slot.subjects?.name} <span className="text-gray-400 font-normal text-xs">({slot.subjects?.code})</span></p>
-                      <p className="text-xs text-gray-500">{slot.teachers?.name} • {slot.room}</p>
+                      <p className="text-sm font-medium text-slate-800">{slot.subjects?.name} <span className="text-slate-400 font-normal text-xs">({slot.subjects?.code})</span></p>
+                      <p className="text-xs text-slate-500">{slot.teachers?.name} • {slot.room}</p>
                     </div>
                   </div>
-                  <button onClick={() => handleDelete(slot.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                  <button onClick={() => handleDelete(slot.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg"><FaTrash className="text-xs" /></button>
                 </div>
               ))}
               {!grouped[day]?.length && <p className="px-5 py-3 text-sm text-gray-400">No classes</p>}
@@ -86,10 +86,10 @@ export default function TimetablePage() {
 
       {modal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between p-5 border-b">
-              <h2 className="font-semibold text-gray-800">Add Timetable Slot</h2>
-              <button onClick={() => setModal(false)}><X size={20} className="text-gray-400" /></button>
+              <h2 className="font-semibold text-slate-800">Add Timetable Slot</h2>
+              <button onClick={() => setModal(false)}><FaXmark className="text-slate-400" /></button>
             </div>
             <form onSubmit={handleAdd} className="p-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">

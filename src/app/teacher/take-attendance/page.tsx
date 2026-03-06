@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import toast from 'react-hot-toast';
-import { QrCode, RefreshCw, Copy, Timer, Users, CheckCircle } from 'lucide-react';
+import { FaQrcode, FaArrowsRotate, FaCopy, FaWhatsapp, FaUsers, FaCircleCheck } from 'react-icons/fa6';
+import { RiTimerLine } from 'react-icons/ri';
 
 interface TimetableSlot {
   id: number;
@@ -170,8 +171,8 @@ export default function TakeAttendancePage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col items-center p-6">
             {!qrToken ? (
               <div className="flex flex-col items-center justify-center gap-4 py-6 w-full">
-                <div className="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center">
-                  <QrCode size={48} className="text-gray-300" />
+                <div className="w-24 h-24 bg-slate-100 rounded-2xl flex items-center justify-center">
+                  <FaQrcode className="text-5xl text-slate-300" />
                 </div>
                 <p className="text-gray-500 text-sm text-center">
                   {selected ? `Ready for ${selected.subjects?.name}` : 'Select a class first'}
@@ -179,9 +180,9 @@ export default function TakeAttendancePage() {
                 <button
                   onClick={generateQR}
                   disabled={!selected || generating}
-                  className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+                  className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 font-medium"
                 >
-                  <QrCode size={18} />
+                  <FaQrcode />
                   {generating ? 'Generating…' : 'Generate QR Code'}
                 </button>
               </div>
@@ -194,9 +195,9 @@ export default function TakeAttendancePage() {
 
                 {/* Timer */}
                 <div className={`flex items-center gap-2 mb-3 text-xl font-bold ${urgency}`}>
-                  <Timer size={20} />
+                  <RiTimerLine />
                   {formatTime(secondsLeft)}
-                  <span className="text-sm font-normal text-gray-400">remaining</span>
+                  <span className="text-sm font-normal text-slate-400">remaining</span>
                 </div>
 
                 {/* QR */}
@@ -206,14 +207,14 @@ export default function TakeAttendancePage() {
 
                 {/* Actions */}
                 <div className="flex flex-wrap gap-2 justify-center mb-3">
-                  <button onClick={generateQR} disabled={generating} className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50">
-                    <RefreshCw size={13} /> Refresh
+                  <button onClick={generateQR} disabled={generating} className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-xl text-sm hover:bg-blue-700 disabled:opacity-50">
+                    <FaArrowsRotate className="text-xs" /> Refresh
                   </button>
-                  <button onClick={copyToken} className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200">
-                    <Copy size={13} /> Copy
+                  <button onClick={copyToken} className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm hover:bg-slate-200">
+                    <FaCopy className="text-xs" /> Copy
                   </button>
-                  <button onClick={shareWhatsApp} className="flex items-center gap-1.5 px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">
-                    📲 WhatsApp
+                  <button onClick={shareWhatsApp} className="flex items-center gap-1.5 px-3 py-2 bg-green-500 text-white rounded-xl text-sm hover:bg-green-600">
+                    <FaWhatsapp /> WhatsApp
                   </button>
                 </div>
 
@@ -236,7 +237,7 @@ export default function TakeAttendancePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                    <Users size={11} /> {liveCount} present
+                    <FaUsers className="text-xs" /> {liveCount} present
                   </span>
                   <span className="text-xs text-gray-400">auto-refresh 5s</span>
                 </div>
@@ -249,7 +250,7 @@ export default function TakeAttendancePage() {
                     {attendees.map((a, i) => (
                       <div key={a.id} className="flex items-center gap-3 px-5 py-2.5">
                         <span className="text-xs text-gray-400 w-5">{i + 1}</span>
-                        <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
+                        <FaCircleCheck className="text-green-500 text-sm flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-800 truncate">{a.students?.name}</p>
                           <p className="text-xs font-mono text-gray-400">{a.students?.enrollment_no}</p>

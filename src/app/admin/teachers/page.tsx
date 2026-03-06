@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import { FaPlus, FaPen, FaTrash, FaXmark } from 'react-icons/fa6';
 
 interface Teacher { id: number; name: string; email: string; phone: string; designation: string; department: string; subject: string; }
 const empty = { name: '', email: '', phone: '', designation: 'Lecturer', department: 'Information Technology', subject: '', password: '' };
@@ -35,43 +35,63 @@ export default function TeachersPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div><h1 className="text-2xl font-bold text-gray-800">Teachers</h1><p className="text-gray-500 text-sm">{teachers.length} total</p></div>
-        <button onClick={openAdd} className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm font-medium"><Plus size={16} />Add Teacher</button>
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="flex items-center justify-between mb-5">
+        <div><h1 className="text-2xl font-bold text-slate-800">Teachers</h1><p className="text-slate-500 text-sm">{teachers.length} total</p></div>
+        <button onClick={openAdd} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 text-sm font-medium"><FaPlus className="text-xs" />Add Teacher</button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+      {/* Mobile card view */}
+      <div className="sm:hidden bg-white rounded-2xl shadow-sm border border-slate-100 divide-y divide-slate-100 mb-4">
+        {teachers.map(t => (
+          <div key={t.id} className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-semibold text-slate-800">{t.name}</p>
+                <p className="text-xs text-slate-400">{t.designation} · {t.department}</p>
+              </div>
+              <div className="flex gap-1">
+                <button onClick={() => openEdit(t)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><FaPen className="text-xs" /></button>
+                <button onClick={() => handleDelete(t.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><FaTrash className="text-xs" /></button>
+              </div>
+            </div>
+            {t.email && <p className="text-xs text-slate-400 mt-1">{t.email}</p>}
+          </div>
+        ))}
+        {!teachers.length && <p className="text-center py-8 text-slate-400 text-sm">No teachers</p>}
+      </div>
+
+      <div className="hidden sm:block bg-white rounded-2xl shadow-sm border border-slate-100 overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+          <thead className="bg-slate-50 text-slate-500 uppercase text-xs">
             <tr>{['ID', 'Name', 'Designation', 'Department', 'Subject', 'Email', 'Actions'].map(h => <th key={h} className="px-4 py-3 text-left font-medium">{h}</th>)}</tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-slate-100">
             {teachers.map(t => (
-              <tr key={t.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-mono text-purple-600 font-medium">{t.id}</td>
-                <td className="px-4 py-3 font-medium text-gray-800">{t.name}</td>
-                <td className="px-4 py-3 text-gray-600">{t.designation}</td>
-                <td className="px-4 py-3 text-gray-600">{t.department}</td>
-                <td className="px-4 py-3 text-gray-600">{t.subject || '—'}</td>
-                <td className="px-4 py-3 text-gray-500">{t.email || '—'}</td>
+              <tr key={t.id} className="hover:bg-slate-50">
+                <td className="px-4 py-3 font-mono text-indigo-600 font-medium">{t.id}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">{t.name}</td>
+                <td className="px-4 py-3 text-slate-600">{t.designation}</td>
+                <td className="px-4 py-3 text-slate-600">{t.department}</td>
+                <td className="px-4 py-3 text-slate-600">{t.subject || '—'}</td>
+                <td className="px-4 py-3 text-slate-400">{t.email || '—'}</td>
                 <td className="px-4 py-3"><div className="flex gap-2">
-                  <button onClick={() => openEdit(t)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"><Pencil size={14} /></button>
-                  <button onClick={() => handleDelete(t.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                  <button onClick={() => openEdit(t)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg"><FaPen className="text-xs" /></button>
+                  <button onClick={() => handleDelete(t.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg"><FaTrash className="text-xs" /></button>
                 </div></td>
               </tr>
             ))}
-            {!teachers.length && <tr><td colSpan={7} className="text-center py-8 text-gray-400">No teachers</td></tr>}
+            {!teachers.length && <tr><td colSpan={7} className="text-center py-8 text-slate-400">No teachers</td></tr>}
           </tbody>
         </table>
       </div>
 
       {modal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between p-5 border-b">
-              <h2 className="font-semibold text-gray-800">{editing ? 'Edit Teacher' : 'Add Teacher'}</h2>
-              <button onClick={() => setModal(false)}><X size={20} className="text-gray-400" /></button>
+              <h2 className="font-semibold text-slate-800">{editing ? 'Edit Teacher' : 'Add Teacher'}</h2>
+              <button onClick={() => setModal(false)}><FaXmark className="text-slate-400" /></button>
             </div>
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               {[

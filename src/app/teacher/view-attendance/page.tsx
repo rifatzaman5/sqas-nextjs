@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { Download, Filter } from 'lucide-react';
+import { FaDownload, FaFilter } from 'react-icons/fa6';
 
 interface AttendanceRecord {
   id: number;
@@ -74,15 +74,15 @@ export default function TeacherViewAttendancePage() {
           <h1 className="text-2xl font-bold text-gray-800">Attendance Records</h1>
           <p className="text-gray-500 text-sm">{filtered.length} records · {uniqueDates} dates · {uniqueStudents} students</p>
         </div>
-        <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700">
-          <Download size={15} /> Export CSV
+        <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm hover:bg-emerald-700">
+          <FaDownload className="text-xs" /> Export CSV
         </button>
       </div>
 
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-        <div className="flex items-center gap-2 mb-3 text-sm text-gray-500 font-medium">
-          <Filter size={14} /> Filters
+        <div className="flex items-center gap-2 mb-3 text-sm text-slate-500 font-medium">
+          <FaFilter className="text-xs" /> Filters
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)}
@@ -134,8 +134,8 @@ export default function TeacherViewAttendancePage() {
             </div>
           ))}
           {!Object.keys(grouped).length && (
-            <div className="text-center py-12 text-gray-400">
-              <p className="text-4xl mb-3">📋</p>
+            <div className="text-center py-12 text-slate-400">
+              <FaFilter className="text-4xl mx-auto mb-3 opacity-30" />
               <p>No attendance records found</p>
               {(filterDate || filterSubject || searchStudent) && <p className="text-sm mt-1">Try clearing the filters</p>}
             </div>

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Settings, MapPin, Clock, Save } from 'lucide-react';
+import { FaGear, FaLocationDot, FaClock, FaFloppyDisk, FaGraduationCap } from 'react-icons/fa6';
 
 interface SettingsData {
   id: number;
@@ -38,22 +38,22 @@ export default function SettingsPage() {
     setLoading(false);
   };
 
-  if (!form) return <div className="p-8 text-center text-gray-400">Loading settings…</div>;
+  if (!form) return <div className="p-8 text-center text-slate-400">Loading settings…</div>;
 
   return (
-    <div className="p-6 lg:p-8 max-w-2xl">
+    <div className="p-4 md:p-6 lg:p-8 max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Settings size={24} className="text-gray-600" /> System Settings
+        <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+          <FaGear className="text-slate-600" /> System Settings
         </h1>
-        <p className="text-gray-500 text-sm mt-1">Configure university location, geofencing and attendance rules</p>
+        <p className="text-slate-500 text-sm mt-1">Configure university location, geofencing and attendance rules</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* University Info */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
-            🎓 University Information
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 className="font-semibold text-slate-700 mb-4 flex items-center gap-2">
+            <FaGraduationCap className="text-indigo-500" /> University Information
           </h2>
           <div className="space-y-4">
             <div>
@@ -78,9 +78,9 @@ export default function SettingsPage() {
         </div>
 
         {/* GPS Geofencing */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-700 mb-1 flex items-center gap-2">
-            <MapPin size={16} className="text-red-500" /> GPS Geofencing
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 className="font-semibold text-slate-700 mb-1 flex items-center gap-2">
+            <FaLocationDot className="text-red-500" /> GPS Geofencing
           </h2>
           <p className="text-xs text-gray-400 mb-4">Students must be within the coverage radius to mark attendance</p>
           <div className="grid grid-cols-2 gap-4">
@@ -130,9 +130,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Attendance Window */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-700 mb-1 flex items-center gap-2">
-            <Clock size={16} className="text-orange-500" /> Attendance Window
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 className="font-semibold text-slate-700 mb-1 flex items-center gap-2">
+            <FaClock className="text-orange-500" /> Attendance Window
           </h2>
           <p className="text-xs text-gray-400 mb-4">How long the QR code remains valid after generation</p>
           <div>
@@ -158,9 +158,9 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-60 font-medium"
+          className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 disabled:opacity-60 font-medium"
         >
-          <Save size={16} />
+          <FaFloppyDisk />
           {loading ? 'Saving…' : 'Save Settings'}
         </button>
       </form>

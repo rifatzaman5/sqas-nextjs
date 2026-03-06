@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import { FaPlus, FaPen, FaTrash, FaXmark, FaMagnifyingGlass } from 'react-icons/fa6';
 
 interface Student { id: number; enrollment_no: string; name: string; batch: string; semester: number; branch: string; email: string; phone: string; }
 
@@ -45,60 +45,89 @@ export default function StudentsPage() {
   const filtered = students.filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.enrollment_no.includes(search));
 
   return (
-    <div className="p-6 lg:p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Students</h1>
-          <p className="text-gray-500 text-sm">{students.length} total students</p>
+          <h1 className="text-2xl font-bold text-slate-800">Students</h1>
+          <p className="text-slate-500 text-sm">{students.length} total students</p>
         </div>
-        <button onClick={openAdd} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium">
-          <Plus size={16} /> Add Student
+        <button onClick={openAdd} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 text-sm font-medium">
+          <FaPlus className="text-xs" /> Add Student
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-4 border-b border-gray-100">
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or enrollment…" className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="p-4 border-b border-slate-100">
+          <div className="relative max-w-xs">
+            <FaMagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or enrollment…" className="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Mobile card view */}
+        <div className="sm:hidden divide-y divide-slate-100">
+          {filtered.map(s => (
+            <div key={s.id} className="p-4">
+              <div className="flex items-start justify-between mb-1">
+                <div>
+                  <p className="font-semibold text-slate-800">{s.name}</p>
+                  <p className="text-xs font-mono text-indigo-600">{s.enrollment_no}</p>
+                </div>
+                <div className="flex gap-1">
+                  <button onClick={() => openEdit(s)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><FaPen className="text-xs" /></button>
+                  <button onClick={() => handleDelete(s.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><FaTrash className="text-xs" /></button>
+                </div>
+              </div>
+              <div className="flex gap-2 flex-wrap mt-1.5">
+                <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs">{s.batch}</span>
+                <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full text-xs">Sem {s.semester}</span>
+                <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full text-xs">{s.branch}</span>
+              </div>
+              {s.email && <p className="text-xs text-slate-400 mt-1">{s.email}</p>}
+            </div>
+          ))}
+          {filtered.length === 0 && <p className="text-center py-8 text-slate-400 text-sm">No students found</p>}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+            <thead className="bg-slate-50 text-slate-500 uppercase text-xs">
               <tr>
                 {['Enrollment', 'Name', 'Batch', 'Semester', 'Branch', 'Email', 'Actions'].map(h => (
                   <th key={h} className="px-4 py-3 text-left font-medium">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-100">
               {filtered.map(s => (
-                <tr key={s.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono font-medium text-blue-600">{s.enrollment_no}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{s.name}</td>
-                  <td className="px-4 py-3"><span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs">{s.batch}</span></td>
-                  <td className="px-4 py-3">{s.semester}</td>
-                  <td className="px-4 py-3 text-gray-600">{s.branch}</td>
-                  <td className="px-4 py-3 text-gray-500">{s.email || '—'}</td>
+                <tr key={s.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-3 font-mono font-medium text-indigo-600">{s.enrollment_no}</td>
+                  <td className="px-4 py-3 font-medium text-slate-800">{s.name}</td>
+                  <td className="px-4 py-3"><span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs">{s.batch}</span></td>
+                  <td className="px-4 py-3 text-slate-600">{s.semester}</td>
+                  <td className="px-4 py-3 text-slate-500">{s.branch}</td>
+                  <td className="px-4 py-3 text-slate-400">{s.email || '—'}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
-                      <button onClick={() => openEdit(s)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"><Pencil size={14} /></button>
-                      <button onClick={() => handleDelete(s.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                      <button onClick={() => openEdit(s)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg"><FaPen className="text-xs" /></button>
+                      <button onClick={() => handleDelete(s.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg"><FaTrash className="text-xs" /></button>
                     </div>
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-gray-400">No students found</td></tr>}
+              {filtered.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-slate-400">No students found</td></tr>}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Modal */}
       {modal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between p-5 border-b">
-              <h2 className="font-semibold text-gray-800">{editing ? 'Edit Student' : 'Add Student'}</h2>
-              <button onClick={() => setModal(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+              <h2 className="font-semibold text-slate-800">{editing ? 'Edit Student' : 'Add Student'}</h2>
+              <button onClick={() => setModal(false)} className="text-slate-400 hover:text-slate-600"><FaXmark /></button>
             </div>
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               {[

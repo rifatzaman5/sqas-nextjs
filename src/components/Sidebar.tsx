@@ -1,47 +1,52 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
-  LayoutDashboard, Users, GraduationCap, BookOpen, CalendarDays, ClipboardList,
-  QrCode, LogOut, Menu, X, ScanLine, CheckSquare, Settings
-} from 'lucide-react';
+  FaHouse, FaGraduationCap, FaChalkboardUser, FaBook,
+  FaCalendarDays, FaClipboardList, FaGear, FaQrcode,
+  FaCamera, FaRightFromBracket, FaBars, FaXmark, FaShieldHalved
+} from 'react-icons/fa6';
 
 interface NavItem { href: string; label: string; icon: React.ReactNode; }
 
 const adminNav: NavItem[] = [
-  { href: '/admin', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-  { href: '/admin/students', label: 'Students', icon: <GraduationCap size={18} /> },
-  { href: '/admin/teachers', label: 'Teachers', icon: <Users size={18} /> },
-  { href: '/admin/subjects', label: 'Subjects', icon: <BookOpen size={18} /> },
-  { href: '/admin/timetable', label: 'Timetable', icon: <CalendarDays size={18} /> },
-  { href: '/admin/attendance', label: 'Attendance', icon: <ClipboardList size={18} /> },
-  { href: '/admin/settings', label: 'Settings', icon: <Settings size={18} /> },
+  { href: '/admin', label: 'Dashboard', icon: <FaHouse /> },
+  { href: '/admin/students', label: 'Students', icon: <FaGraduationCap /> },
+  { href: '/admin/teachers', label: 'Teachers', icon: <FaChalkboardUser /> },
+  { href: '/admin/subjects', label: 'Subjects', icon: <FaBook /> },
+  { href: '/admin/timetable', label: 'Timetable', icon: <FaCalendarDays /> },
+  { href: '/admin/attendance', label: 'Attendance', icon: <FaClipboardList /> },
+  { href: '/admin/settings', label: 'Settings', icon: <FaGear /> },
 ];
 
 const teacherNav: NavItem[] = [
-  { href: '/teacher', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-  { href: '/teacher/take-attendance', label: 'Take Attendance', icon: <QrCode size={18} /> },
-  { href: '/teacher/view-attendance', label: 'View Attendance', icon: <ClipboardList size={18} /> },
+  { href: '/teacher', label: 'Dashboard', icon: <FaHouse /> },
+  { href: '/teacher/take-attendance', label: 'Take Attendance', icon: <FaQrcode /> },
+  { href: '/teacher/view-attendance', label: 'View Attendance', icon: <FaClipboardList /> },
 ];
 
 const studentNav: NavItem[] = [
-  { href: '/student', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-  { href: '/student/mark-attendance', label: 'Mark Attendance', icon: <ScanLine size={18} /> },
-  { href: '/student/view-attendance', label: 'My Attendance', icon: <CheckSquare size={18} /> },
+  { href: '/student', label: 'Dashboard', icon: <FaHouse /> },
+  { href: '/student/mark-attendance', label: 'Mark Attendance', icon: <FaCamera /> },
+  { href: '/student/view-attendance', label: 'My Attendance', icon: <FaClipboardList /> },
 ];
 
 const navMap = { admin: adminNav, teacher: teacherNav, student: studentNav };
-const roleColors = { admin: 'from-slate-800 to-slate-900', teacher: 'from-blue-800 to-blue-900', student: 'from-emerald-800 to-emerald-900' };
-const roleTitles = { admin: '🔐 Admin', teacher: '👨‍🏫 Teacher', student: '🎓 Student' };
-const uniName = 'University of Sargodha';
+
+const roleConfig = {
+  admin:   { bar: 'from-indigo-700 to-indigo-900', sidebar: 'from-indigo-700 to-indigo-900', accent: 'bg-indigo-600', badge: 'Admin',   badgeColor: 'bg-indigo-100 text-indigo-700', icon: <FaShieldHalved className="text-indigo-200" /> },
+  teacher: { bar: 'from-blue-600 to-blue-800',     sidebar: 'from-blue-600 to-blue-800',     accent: 'bg-blue-600',   badge: 'Teacher', badgeColor: 'bg-blue-100 text-blue-700',     icon: <FaChalkboardUser className="text-blue-200" /> },
+  student: { bar: 'from-emerald-600 to-emerald-800', sidebar: 'from-emerald-600 to-emerald-800', accent: 'bg-emerald-600', badge: 'Student', badgeColor: 'bg-emerald-100 text-emerald-700', icon: <FaGraduationCap className="text-emerald-200" /> },
+};
 
 export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 'student'; name: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const nav = navMap[role];
+  const cfg = roleConfig[role];
 
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -50,20 +55,22 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
     router.refresh();
   };
 
-  const NavLinks = () => (
-    <nav className="flex-1 px-3 py-4 space-y-1">
+  const isActive = (href: string) => pathname === href;
+
+  const NavLinks = ({ onClose }: { onClose?: () => void }) => (
+    <nav className="flex-1 py-2 px-2 overflow-y-auto">
       {nav.map((item) => {
-        const active = pathname === item.href;
+        const active = isActive(item.href);
         return (
           <Link
             key={item.href}
             href={item.href}
-            onClick={() => setOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              active ? 'bg-white/20 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'
+            onClick={onClose}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium mb-0.5 transition-all ${
+              active ? 'bg-white/20 text-white shadow-sm' : 'text-white/65 hover:bg-white/10 hover:text-white'
             }`}
           >
-            {item.icon}
+            <span className={`text-base flex-shrink-0 ${active ? 'text-white' : 'text-white/50'}`}>{item.icon}</span>
             {item.label}
           </Link>
         );
@@ -73,55 +80,105 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className={`lg:hidden flex items-center justify-between px-4 py-3 bg-gradient-to-r ${roleColors[role]} text-white`}>
-        <div>
-          <span className="font-bold text-sm">SQAS</span>
-          <span className="text-white/60 text-xs ml-2">{roleTitles[role]}</span>
-        </div>
-        <button onClick={() => setOpen(!open)} className="p-1">
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* Mobile drawer overlay */}
-      {open && <div className="lg:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setOpen(false)} />}
-
-      {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col bg-gradient-to-b ${roleColors[role]} text-white transform transition-transform lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'} lg:min-h-screen`}>
-        {/* Brand */}
-        <div className="px-6 py-5 border-b border-white/10">
-          <h1 className="text-xl font-bold">SQAS</h1>
-          <p className="text-white/60 text-xs mt-0.5">Smart Attendance System</p>
-          <p className="text-white/40 text-xs mt-0.5">{uniName}</p>
-        </div>
-
-        {/* User info */}
-        <div className="px-4 py-3 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
-              {name.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <p className="text-sm font-medium">{name}</p>
-              <p className="text-xs text-white/60 capitalize">{roleTitles[role]}</p>
-            </div>
+      {/* â”€â”€ Mobile fixed top bar â”€â”€ */}
+      <header className={`lg:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-gradient-to-r ${cfg.bar} flex items-center justify-between px-4 shadow-md`}>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center text-base">
+            {cfg.icon}
+          </div>
+          <div>
+            <p className="text-white font-bold text-sm leading-none">SQAS</p>
+            <p className="text-white/55 text-[10px] leading-none mt-0.5 truncate max-w-[140px]">{name}</p>
           </div>
         </div>
+        <button
+          onClick={() => setOpen(true)}
+          className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white"
+        >
+          <FaBars size={15} />
+        </button>
+      </header>
 
-        <NavLinks />
+      {/* â”€â”€ Mobile overlay â”€â”€ */}
+      {open && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
-        {/* Logout */}
-        <div className="px-3 pb-4">
+      {/* â”€â”€ Mobile slide-out drawer â”€â”€ */}
+      <div className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 flex flex-col bg-gradient-to-b ${cfg.sidebar} shadow-2xl transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Drawer header */}
+        <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/10">
+          <div>
+            <p className="text-white font-bold text-xl">SQAS</p>
+            <p className="text-white/55 text-xs mt-0.5">Smart Attendance System</p>
+            <p className="text-white/35 text-xs mt-0.5">University of Sargodha</p>
+          </div>
+          <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white mt-0.5 transition-colors">
+            <FaXmark size={18} />
+          </button>
+        </div>
+        {/* User */}
+        <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3">
+          <div className={`w-10 h-10 ${cfg.accent} rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+            {name.charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-white text-sm truncate">{name}</p>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${cfg.badgeColor}`}>{cfg.badge}</span>
+          </div>
+        </div>
+        <NavLinks onClose={() => setOpen(false)} />
+        <div className="p-3 border-t border-white/10">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/10 hover:text-white transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all"
           >
-            <LogOut size={18} />
-            Logout
+            <FaRightFromBracket className="text-white/50 text-base" />
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+      {/* â”€â”€ Desktop sidebar â”€â”€ */}
+      <aside className={`hidden lg:flex flex-col w-60 min-h-screen bg-gradient-to-b ${cfg.sidebar} flex-shrink-0`}>
+        {/* Brand */}
+        <div className="px-5 py-5 border-b border-white/10">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center text-lg">
+              {cfg.icon}
+            </div>
+            <div>
+              <p className="text-white font-bold text-base leading-none">SQAS</p>
+              <p className="text-white/50 text-[10px] leading-none mt-1">Smart QR Attendance</p>
+            </div>
+          </div>
+          <p className="text-white/35 text-[10px] mt-1">University of Sargodha</p>
+        </div>
+        {/* User */}
+        <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3">
+          <div className={`w-9 h-9 ${cfg.accent} rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+            {name.charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-white text-sm truncate">{name}</p>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${cfg.badgeColor}`}>{cfg.badge}</span>
+          </div>
+        </div>
+        <NavLinks />
+        <div className="p-3 border-t border-white/10">
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all"
+          >
+            <FaRightFromBracket className="text-white/50 text-base" />
+            Sign Out
           </button>
         </div>
       </aside>
     </>
   );
 }
+
