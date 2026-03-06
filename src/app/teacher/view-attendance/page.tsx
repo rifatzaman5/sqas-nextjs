@@ -27,15 +27,20 @@ export default function TeacherViewAttendancePage() {
 
   const fetchRecords = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams();
-    if (filterDate) params.set('date', filterDate);
-    if (filterSubject) params.set('subject_id', filterSubject);
-    const r = await fetch(`/api/attendance?${params}`);
-    if (r.ok) {
-      const data = await r.json();
-      setRecords(data);
+    try {
+      const params = new URLSearchParams();
+      if (filterDate) params.set('date', filterDate);
+      if (filterSubject) params.set('subject_id', filterSubject);
+      const r = await fetch(`/api/attendance?${params}`);
+      if (r.ok) {
+        const data = await r.json();
+        setRecords(Array.isArray(data) ? data : []);
+      }
+    } catch {
+      // network error — keep existing records
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [filterDate, filterSubject]);
 
   useEffect(() => { fetchRecords(); }, [fetchRecords]);

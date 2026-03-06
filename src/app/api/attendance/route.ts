@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
   let query = supabaseAdmin
     .from('attendance')
-    .select('*, students(name, enrollment_no), subjects(name, code), teachers(name), timetable(day, start_time, end_time)')
+    .select('*, students(name, enrollment_no), subjects(name, code), teachers(name), timetable(day, start_time, end_time, batch, room)')
     .order('date', { ascending: false })
     .order('created_at', { ascending: false });
 

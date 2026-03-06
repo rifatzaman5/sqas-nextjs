@@ -45,7 +45,7 @@ export default function AdminAttendancePage() {
     const params = new URLSearchParams();
     if (filter.date) params.set('date', filter.date);
     const r = await fetch(`/api/attendance?${params}`);
-    if (r.ok) setRecords(await r.json());
+    if (r.ok) { const d = await r.json(); setRecords(Array.isArray(d) ? d : []); }
     setLoading(false);
   }, [filter.date]);
 
