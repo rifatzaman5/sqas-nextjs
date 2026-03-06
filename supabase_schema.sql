@@ -106,23 +106,23 @@ CREATE TABLE IF NOT EXISTS settings (
 -- SEED DATA
 -- =============================================
 -- Password for all: 123 (bcrypt hash)
--- $2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
+-- $2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm
 
 -- Insert admin
 INSERT INTO admins (username, password) VALUES
-('admin', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
+('admin', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (username) DO NOTHING;
 
 -- Insert teacher
 INSERT INTO teachers (id, name, email, phone, designation, department, subject, password) VALUES
-(1, 'Dr. Muhammad Ali Raza', 'ali.raza@uog.edu.pk', '0300-1234567', 'Assistant Professor', 'Information Technology', 'Software Engineering', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
+(1, 'Dr. Muhammad Ali Raza', 'ali.raza@uog.edu.pk', '0300-1234567', 'Assistant Professor', 'Information Technology', 'Software Engineering', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert students
 INSERT INTO students (enrollment_no, name, batch, semester, branch, password) VALUES
-('220064', 'Sania Nawaz', 'F22', 5, 'Information Technology', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('220091', 'Sania Saeed', 'F22', 5, 'Information Technology', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('210051', 'Waqar Ali', 'F21', 5, 'Information Technology', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
+('220064', 'Sania Nawaz', 'F22', 5, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+('220091', 'Sania Saeed', 'F22', 5, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+('210051', 'Waqar Ali', 'F21', 5, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (enrollment_no) DO NOTHING;
 
 -- Insert subjects
@@ -168,6 +168,15 @@ ALTER TABLE qr_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
 -- Allow service role full access (used by API routes)
+DROP POLICY IF EXISTS "service_role_all" ON admins;
+DROP POLICY IF EXISTS "service_role_all" ON teachers;
+DROP POLICY IF EXISTS "service_role_all" ON students;
+DROP POLICY IF EXISTS "service_role_all" ON subjects;
+DROP POLICY IF EXISTS "service_role_all" ON timetable;
+DROP POLICY IF EXISTS "service_role_all" ON attendance;
+DROP POLICY IF EXISTS "service_role_all" ON qr_tokens;
+DROP POLICY IF EXISTS "service_role_all" ON settings;
+
 CREATE POLICY "service_role_all" ON admins FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON teachers FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON students FOR ALL USING (true);
@@ -176,3 +185,8 @@ CREATE POLICY "service_role_all" ON timetable FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON attendance FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON qr_tokens FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON settings FOR ALL USING (true);
+
+-- Fix passwords: ensure all accounts use hash for "123"
+UPDATE admins  SET password = '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm';
+UPDATE teachers SET password = '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm';
+UPDATE students SET password = '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm';
