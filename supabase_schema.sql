@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS qr_tokens (
 -- Settings table
 CREATE TABLE IF NOT EXISTS settings (
   id SERIAL PRIMARY KEY,
-  university_name TEXT DEFAULT 'University of Gujrat',
-  address TEXT DEFAULT 'Hafiz Hayat Campus, Gujrat',
+  university_name TEXT DEFAULT 'University of Sargodha',
+  address TEXT DEFAULT 'Sargodha Campus, Sargodha',
   lat DECIMAL(10,7) DEFAULT 32.5785,
   lon DECIMAL(10,7) DEFAULT 74.0828,
   coverage DECIMAL(5,2) DEFAULT 0.5,
@@ -115,7 +115,7 @@ ON CONFLICT (username) DO NOTHING;
 
 -- Insert teacher
 INSERT INTO teachers (id, name, email, phone, designation, department, subject, password) VALUES
-(1, 'Dr. Muhammad Ali Raza', 'ali.raza@uog.edu.pk', '0300-1234567', 'Assistant Professor', 'Information Technology', 'Software Engineering', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
+(1, 'Dr. Muhammad Ali Raza', 'ali.raza@uos.edu.pk', '0300-1234567', 'Assistant Professor', 'Information Technology', 'Software Engineering', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert students

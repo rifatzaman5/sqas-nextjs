@@ -10,7 +10,7 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "SQAS – Smart Attendance System using QR Scanning",
-  description: "Smart QR Attendance – University of Gujrat, Dept. of IT",
+  description: "Smart QR Attendance – University of Sargodha, Dept. of IT",
 };
 
 export default function RootLayout({

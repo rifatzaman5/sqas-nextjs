@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       if (!seen.has(key)) {
         seen.add(key);
         const sid = row.subject_id as number;
-        if (!map[sid]) map[sid] = { subject_id: sid, name: (row.subjects as {name:string;code:string})?.name || '', code: (row.subjects as {name:string;code:string})?.code || '', total: 0 };
+        if (!map[sid]) map[sid] = { subject_id: sid, name: (row.subjects as unknown as {name:string;code:string})?.name || '', code: (row.subjects as unknown as {name:string;code:string})?.code || '', total: 0 };
         map[sid].total++;
       }
     }

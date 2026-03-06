@@ -175,7 +175,7 @@ export default function StudentViewAttendancePage() {
 
           {/* 75% rule note */}
           <p className="mt-4 text-xs text-gray-400 text-center">
-            University of Gujrat requires minimum 75% attendance to appear in exams
+            University of Sargodha requires minimum 75% attendance to appear in exams
           </p>
         </>
       )}
