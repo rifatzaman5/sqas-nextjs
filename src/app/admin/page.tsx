@@ -112,7 +112,6 @@ export default async function AdminDashboard() {
   );
 }
 
-  const [s, t, sub, att] = await Promise.all([
     supabaseAdmin.from('students').select('id', { count: 'exact', head: true }),
     supabaseAdmin.from('teachers').select('id', { count: 'exact', head: true }),
     supabaseAdmin.from('subjects').select('id', { count: 'exact', head: true }),

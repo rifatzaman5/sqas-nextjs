@@ -107,8 +107,6 @@ export default async function StudentDashboard() {
   );
 }
 
-  const session = await getSession();
-
   const { data: student } = await supabaseAdmin
     .from('students')
     .select('name, enrollment_no, batch, semester, branch')

@@ -53,25 +53,3 @@ export async function DELETE(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
 }
-
-export async function POST(req: NextRequest) {
-  const session = await getSession();
-  if (!session || session.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const body = await req.json();
-  const { data, error } = await supabaseAdmin
-    .from('timetable')
-    .insert(body)
-    .select('*, subjects(name, code), teachers(name)')
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data, { status: 201 });
-}
-
-export async function DELETE(req: NextRequest) {
-  const session = await getSession();
-  if (!session || session.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { id } = await req.json();
-  const { error } = await supabaseAdmin.from('timetable').delete().eq('id', id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ success: true });
-}

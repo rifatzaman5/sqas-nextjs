@@ -267,8 +267,6 @@ export default function TakeAttendancePage() {
     </div>
   );
 }
-
-  const [slots, setSlots] = useState<TimetableSlot[]>([]);
   const [selected, setSelected] = useState<TimetableSlot | null>(null);
   const [qrToken, setQrToken] = useState('');
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);

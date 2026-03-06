@@ -145,10 +145,6 @@ export default function TeacherViewAttendancePage() {
     </div>
   );
 }
-
-  id: number;
-  date: string;
-  status: string;
   students?: { name: string; enrollment_no: string };
   subjects?: { name: string; code: string };
   timetable?: { day: string; start_time: string };
