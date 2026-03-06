@@ -4,7 +4,7 @@ import { getSession } from '@/lib/auth';
 
 export async function GET() {
   const session = await getSession();
-  if (!session || session.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!session || (session.role !== 'admin' && session.role !== 'teacher')) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { data, error } = await supabaseAdmin
     .from('subjects')
     .select('*, teachers(name)')

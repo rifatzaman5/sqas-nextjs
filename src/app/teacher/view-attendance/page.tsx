@@ -22,7 +22,7 @@ export default function TeacherViewAttendancePage() {
   const [searchStudent, setSearchStudent] = useState('');
 
   useEffect(() => {
-    fetch('/api/subjects').then(r => r.json()).then(setSubjects).catch(() => {});
+    fetch('/api/subjects').then(r => r.json()).then(d => setSubjects(Array.isArray(d) ? d : [])).catch(() => {});
   }, []);
 
   const fetchRecords = useCallback(async () => {
