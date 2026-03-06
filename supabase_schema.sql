@@ -154,8 +154,16 @@ INSERT INTO timetable (subject_id, teacher_id, day, start_time, end_time, room, 
 
 -- Insert settings
 INSERT INTO settings (university_name, address, lat, lon, coverage, attendance_window)
-VALUES ('University of Gujrat', 'Hafiz Hayat Campus, Gujrat, Punjab, Pakistan', 32.5785, 74.0828, 0.5, 15)
+VALUES ('University of Sargodha', 'University Road, Sargodha, Punjab, Pakistan', 32.0740, 72.6861, 0.5, 15)
 ON CONFLICT DO NOTHING;
+
+-- Update settings to UoS if already inserted
+UPDATE settings SET
+  university_name = 'University of Sargodha',
+  address = 'University Road, Sargodha, Punjab, Pakistan',
+  lat = 32.0740,
+  lon = 72.6861
+WHERE id = 1;
 
 -- Enable Row Level Security (disable for simplicity with service role)
 ALTER TABLE admins ENABLE ROW LEVEL SECURITY;

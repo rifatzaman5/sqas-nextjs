@@ -20,9 +20,13 @@ export async function POST(req: NextRequest) {
 
   if (!slot) return NextResponse.json({ error: 'Timetable slot not found' }, { status: 404 });
 
+  // Read attendance window from settings (default 15 min)
+  const { data: settings } = await supabaseAdmin.from('settings').select('attendance_window').eq('id', 1).single();
+  const windowMinutes = settings?.attendance_window || 15;
+
   // Generate unique token
   const token = `SQAS-${timetable_id}-${Date.now()}-${crypto.randomBytes(6).toString('hex').toUpperCase()}`;
-  const expires_at = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 minutes
+  const expires_at = new Date(Date.now() + windowMinutes * 60 * 1000).toISOString();
 
   // Delete old tokens for this slot
   await supabaseAdmin.from('qr_tokens').delete().eq('timetable_id', timetable_id);
@@ -35,5 +39,5 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ token: data.token, expires_at: data.expires_at });
+  return NextResponse.json({ token: data.token, expires_at: data.expires_at, window_minutes: windowMinutes });
 }

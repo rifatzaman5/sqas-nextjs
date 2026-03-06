@@ -5,7 +5,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen, CalendarDays, ClipboardList,
-  QrCode, LogOut, Menu, X, ScanLine, CheckSquare
+  QrCode, LogOut, Menu, X, ScanLine, CheckSquare, Settings
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ReactNode; }
@@ -17,6 +17,7 @@ const adminNav: NavItem[] = [
   { href: '/admin/subjects', label: 'Subjects', icon: <BookOpen size={18} /> },
   { href: '/admin/timetable', label: 'Timetable', icon: <CalendarDays size={18} /> },
   { href: '/admin/attendance', label: 'Attendance', icon: <ClipboardList size={18} /> },
+  { href: '/admin/settings', label: 'Settings', icon: <Settings size={18} /> },
 ];
 
 const teacherNav: NavItem[] = [
@@ -34,6 +35,7 @@ const studentNav: NavItem[] = [
 const navMap = { admin: adminNav, teacher: teacherNav, student: studentNav };
 const roleColors = { admin: 'from-slate-800 to-slate-900', teacher: 'from-blue-800 to-blue-900', student: 'from-emerald-800 to-emerald-900' };
 const roleTitles = { admin: '🔐 Admin', teacher: '👨‍🏫 Teacher', student: '🎓 Student' };
+const uniName = 'University of Sargodha';
 
 export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 'student'; name: string }) {
   const pathname = usePathname();
@@ -91,6 +93,7 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
         <div className="px-6 py-5 border-b border-white/10">
           <h1 className="text-xl font-bold">SQAS</h1>
           <p className="text-white/60 text-xs mt-0.5">Smart Attendance System</p>
+          <p className="text-white/40 text-xs mt-0.5">{uniName}</p>
         </div>
 
         {/* User info */}

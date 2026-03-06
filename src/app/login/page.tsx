@@ -44,7 +44,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-3xl font-bold text-white">SQAS</h1>
           <p className="text-blue-300 text-sm mt-1">Smart Attendance System using QR Scanning</p>
-          <p className="text-slate-400 text-xs mt-1">University of Gujrat — Dept. of Information Technology</p>
+          <p className="text-slate-400 text-xs mt-1">University of Sargodha — Dept. of Information Technology</p>
         </div>
 
         {/* Card */}
@@ -118,7 +118,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-slate-500 text-xs mt-6">
-          Sania Nawaz • Sania Saeed • Waqar Ali | BSIT Sem 5
+          Sania Nawaz • Sania Saeed • Waqar Ali | BSIT Sem 5 · UoS
         </p>
       </div>
     </div>

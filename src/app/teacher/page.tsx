@@ -18,7 +18,7 @@ export default async function TeacherDashboard() {
     <div className="p-6 lg:p-8">
       <div className="mb-8">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">Welcome, {session!.name}</h1>
-        <p className="text-gray-500 mt-1">University of Gujrat — Dept. of Information Technology</p>
+        <p className="text-gray-500 mt-1">University of Sargodha — Dept. of Information Technology</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-8">
