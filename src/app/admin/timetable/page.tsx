@@ -8,7 +8,7 @@ interface Subject { id: number; name: string; code: string; }
 interface Teacher { id: number; name: string; }
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const empty = { subject_id: '', teacher_id: '', day: 'Monday', start_time: '08:00', end_time: '09:00', room: 'Lab-1', batch: 'F22', branch: 'Information Technology', academic_year: '2025-26' };
+const empty = { subject_id: '', teacher_id: '', day: 'Monday', start_time: '08:00', end_time: '09:00', room: 'MAB CR-168', batch: 'BSIT-R0-2022', branch: 'Information Technology', academic_year: '2025-26' };
 
 export default function TimetablePage() {
   const [slots, setSlots] = useState<TimetableSlot[]>([]);
@@ -17,7 +17,7 @@ export default function TimetablePage() {
   const [modal, setModal] = useState(false);
   const [form, setForm] = useState(empty);
   const [loading, setLoading] = useState(false);
-  const [filterBatch, setFilterBatch] = useState('F22');
+  const [filterBatch, setFilterBatch] = useState('BSIT-R0-2022');
 
   const fetchAll = async () => {
     const [sr, tr, rr] = await Promise.all([
@@ -52,7 +52,7 @@ export default function TimetablePage() {
         <div><h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Timetable</h1><p className="text-slate-500 dark:text-slate-400 text-sm">Academic Year 2025-26</p></div>
         <div className="flex gap-3">
           <select value={filterBatch} onChange={e => setFilterBatch(e.target.value)} className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800">
-            {['F22', 'F21', 'F20', 'F23'].map(b => <option key={b}>{b}</option>)}
+            {['BSIT-R0-2022', 'BSIT-R0-2021', 'BSIT-R0-2023', 'BSIT-R0-2020'].map(b => <option key={b}>{b}</option>)}
           </select>
           <button onClick={() => { setForm({ ...empty, subject_id: subjects[0]?.id?.toString() || '', teacher_id: teachers[0]?.id?.toString() || '' }); setModal(true); }} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 text-sm font-medium"><FaPlus className="text-xs" />Add Slot</button>
         </div>
@@ -98,7 +98,7 @@ export default function TimetablePage() {
                     {DAYS.map(d => <option key={d}>{d}</option>)}</select></div>
                 <div><label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Batch</label>
                   <select value={form.batch} onChange={e => setForm({ ...form, batch: e.target.value })} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700">
-                    {['F22', 'F21', 'F20', 'F23'].map(b => <option key={b}>{b}</option>)}</select></div>
+                    {['BSIT-R0-2022', 'BSIT-R0-2021', 'BSIT-R0-2023', 'BSIT-R0-2020'].map(b => <option key={b}>{b}</option>)}</select></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Start Time</label>
@@ -116,7 +116,7 @@ export default function TimetablePage() {
                 <input type="text" value={form.room} onChange={e => setForm({ ...form, room: e.target.value })} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700" /></div>
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setModal(false)} className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">Cancel</button>
-                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-60">{loading ? 'Saving…' : 'Add Slot'}</button>
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50">{loading ? 'Saving…' : 'Add Slot'}</button>
               </div>
             </form>
           </div>

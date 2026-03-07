@@ -120,7 +120,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full ${activeRole.color} disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-sm`}
+              className={`w-full ${activeRole.color} disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-sm`}
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-slate-500 text-xs mt-5">
-          Sania Nawaz &middot; Sania Saeed &middot; Waqar Ali &mdash; BSIT Sem 5 &middot; UoS
+          BS Information Technology &middot; Regular 0 (2022-2026) &middot; Semester 8 &middot; UoS
         </p>
       </div>
     </div>

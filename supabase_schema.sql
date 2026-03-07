@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS students (
   id SERIAL PRIMARY KEY,
   enrollment_no TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
-  batch TEXT DEFAULT 'F22',
-  semester SMALLINT DEFAULT 5,
+  batch TEXT DEFAULT 'BSIT-R0-2022',
+  semester SMALLINT DEFAULT 8,
   branch TEXT DEFAULT 'Information Technology',
   email TEXT,
   phone TEXT,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS subjects (
   name TEXT NOT NULL,
   code TEXT,
   branch TEXT DEFAULT 'Information Technology',
-  semester SMALLINT DEFAULT 5,
+  semester SMALLINT DEFAULT 8,
   teacher_id INTEGER REFERENCES teachers(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS timetable (
   start_time TEXT NOT NULL,
   end_time TEXT NOT NULL,
   room TEXT DEFAULT 'Lab-1',
-  batch TEXT DEFAULT 'F22',
+  batch TEXT DEFAULT 'BSIT-R0-2022',
   branch TEXT DEFAULT 'Information Technology',
   academic_year TEXT DEFAULT '2025-26',
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -113,44 +113,49 @@ INSERT INTO admins (username, password) VALUES
 ('admin', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (username) DO NOTHING;
 
--- Insert teacher
+-- Insert teachers (real Semester 8 teachers)
 INSERT INTO teachers (id, name, email, phone, designation, department, subject, password) VALUES
-(1, 'Dr. Muhammad Ali Raza', 'ali.raza@uos.edu.pk', '0300-1234567', 'Assistant Professor', 'Information Technology', 'Software Engineering', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
+(1, 'Azhar Mushtaq',           'azhar.mushtaq@uos.edu.pk',       '', 'Lecturer', 'Information Technology', 'Cyber Security',                              '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+(2, 'Aoun Abbas',              'aoun.abbas@uos.edu.pk',           '', 'Lecturer', 'Information Technology', 'Database Administration and Management',       '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+(3, 'Faisal Imran',            'faisal.imran@uos.edu.pk',         '', 'Lecturer', 'Information Technology', 'Translation of Holy Quran-IV',                 '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+(4, 'Dr. Khalid Mahmood Aamir','khalid.mahmood@uos.edu.pk',       '', 'Assistant Professor', 'Information Technology', 'Final Year Project-II',           '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+(5, 'Zubair Hanif',            'zubair.hanif@uos.edu.pk',         '', 'Lecturer', 'Information Technology', 'Citizenship',                                  '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (id) DO NOTHING;
 
--- Insert students
+-- Insert students (will be updated with real list later)
 INSERT INTO students (enrollment_no, name, batch, semester, branch, password) VALUES
-('220064', 'Sania Nawaz', 'F22', 5, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
-('220091', 'Sania Saeed', 'F22', 5, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
-('210051', 'Waqar Ali', 'F21', 5, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
+('220064', 'Sania Nawaz',  'BSIT-R0-2022', 8, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+('220091', 'Sania Saeed',  'BSIT-R0-2022', 8, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm'),
+('210051', 'Waqar Ali',    'BSIT-R0-2022', 8, 'Information Technology', '$2b$10$pj.5HlXzx5gtaY3uV2fPiuRnUqvHBf6YqIPUdKrXCo7dPEAUQr6dm')
 ON CONFLICT (enrollment_no) DO NOTHING;
 
--- Insert subjects
+-- Insert subjects (real Semester 8 subjects)
 INSERT INTO subjects (id, name, code, branch, semester, teacher_id) VALUES
-(1, 'Software Engineering', 'SE-501', 'Information Technology', 5, 1),
-(2, 'Computer Networks', 'CN-502', 'Information Technology', 5, 1),
-(3, 'Artificial Intelligence', 'AI-503', 'Information Technology', 5, 1),
-(4, 'Database Systems', 'DBS-504', 'Information Technology', 5, 1),
-(5, 'Web Technologies', 'WT-505', 'Information Technology', 5, 1)
+(1, 'Cyber Security',                              'ITCC-402',   'Information Technology', 8, 1),
+(2, 'Database Administration and Management',       'ITCC-406',   'Information Technology', 8, 2),
+(3, 'Translation of Holy Quran-IV',                 'URCG-5111',  'Information Technology', 8, 3),
+(4, 'Final Year Project-II',                        'CMPC-402',   'Information Technology', 8, 4),
+(5, 'Citizenship',                                  'URCC-1010',  'Information Technology', 8, 5)
 ON CONFLICT (id) DO NOTHING;
 
--- Insert timetable
+-- Insert timetable (real Semester 8 schedule - BS IT Regular 0, 2022-2026)
 INSERT INTO timetable (subject_id, teacher_id, day, start_time, end_time, room, batch, branch, academic_year) VALUES
-(1, 1, 'Monday',    '08:00', '09:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(2, 1, 'Monday',    '09:00', '10:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(3, 1, 'Monday',    '10:00', '11:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(4, 1, 'Tuesday',   '08:00', '09:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(5, 1, 'Tuesday',   '09:00', '10:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(1, 1, 'Tuesday',   '10:00', '11:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(2, 1, 'Wednesday', '08:00', '09:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(3, 1, 'Wednesday', '09:00', '10:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(4, 1, 'Wednesday', '10:00', '11:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(5, 1, 'Thursday',  '08:00', '09:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(1, 1, 'Thursday',  '09:00', '10:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(2, 1, 'Thursday',  '10:00', '11:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(3, 1, 'Friday',    '08:00', '09:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(4, 1, 'Friday',    '09:00', '10:00', 'Lab-1', 'F22', 'Information Technology', '2025-26'),
-(5, 1, 'Friday',    '10:00', '11:00', 'Lab-1', 'F22', 'Information Technology', '2025-26');
+-- Monday
+(1, 1, 'Monday',    '10:00', '11:00', 'MAB CR-168',                   'BSIT-R0-2022', 'Information Technology', '2025-26'),
+(2, 2, 'Monday',    '11:00', '12:00', 'MAB CyberL-05 (FYP Lab)',      'BSIT-R0-2022', 'Information Technology', '2025-26'),
+-- Tuesday
+(2, 2, 'Tuesday',   '08:00', '09:00', 'MAB L-01',                     'BSIT-R0-2022', 'Information Technology', '2025-26'),
+(3, 3, 'Tuesday',   '10:50', '11:30', 'Physics Hall',                  'BSIT-R0-2022', 'Information Technology', '2025-26'),
+(4, 4, 'Tuesday',   '11:30', '12:30', 'MAB CR-170',                   'BSIT-R0-2022', 'Information Technology', '2025-26'),
+-- Wednesday
+(2, 2, 'Wednesday', '09:00', '10:00', 'MAB CR-167',                   'BSIT-R0-2022', 'Information Technology', '2025-26'),
+(5, 5, 'Wednesday', '11:40', '12:40', 'MAB CR-169',                   'BSIT-R0-2022', 'Information Technology', '2025-26'),
+(1, 1, 'Wednesday', '12:40', '13:40', 'MAB CR-168',                   'BSIT-R0-2022', 'Information Technology', '2025-26'),
+-- Thursday
+(4, 4, 'Thursday',  '11:00', '12:00', 'MAB CR-170',                   'BSIT-R0-2022', 'Information Technology', '2025-26'),
+(5, 5, 'Thursday',  '12:00', '13:00', 'Maryam Hall CR-5',             'BSIT-R0-2022', 'Information Technology', '2025-26'),
+-- Friday
+(2, 2, 'Friday',    '09:00', '10:00', 'MAB CR-167',                   'BSIT-R0-2022', 'Information Technology', '2025-26');
 
 -- Insert settings
 INSERT INTO settings (university_name, address, lat, lon, coverage, attendance_window)

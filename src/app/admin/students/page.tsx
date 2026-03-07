@@ -5,7 +5,7 @@ import { FaPlus, FaPen, FaTrash, FaXmark, FaMagnifyingGlass } from 'react-icons/
 
 interface Student { id: number; enrollment_no: string; name: string; batch: string; semester: number; branch: string; email: string; phone: string; }
 
-const empty = { enrollment_no: '', name: '', batch: 'F22', semester: 5, branch: 'Information Technology', email: '', phone: '', password: '' };
+const empty = { enrollment_no: '', name: '', batch: 'BSIT-R0-2022', semester: 8, branch: 'Information Technology', email: '', phone: '', password: '' };
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -152,7 +152,7 @@ export default function StudentsPage() {
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Batch</label>
                   <select value={form.batch} onChange={e => setForm({ ...form, batch: e.target.value })} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700">
-                    {['F22', 'F21', 'F20', 'F23'].map(b => <option key={b}>{b}</option>)}
+                    {['BSIT-R0-2022', 'BSIT-R0-2021', 'BSIT-R0-2023', 'BSIT-R0-2020'].map(b => <option key={b}>{b}</option>)}
                   </select>
                 </div>
                 <div>
@@ -164,7 +164,7 @@ export default function StudentsPage() {
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setModal(false)} className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">Cancel</button>
-                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-60">
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50">
                   {loading ? 'Saving…' : editing ? 'Update' : 'Add'}
                 </button>
               </div>

@@ -1,9 +1,13 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaCamera, FaKeyboard, FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
+import { FaCamera, FaKeyboard, FaCircleCheck, FaCircleXmark, FaCalendarXmark } from 'react-icons/fa6';
+
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function MarkAttendancePage() {
+  const today = WEEKDAYS[new Date().getDay()];
+  const isWeekend = today === 'Saturday' || today === 'Sunday';
   const scannerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const html5QrRef = useRef<any>(null);
@@ -118,6 +122,19 @@ export default function MarkAttendancePage() {
     );
   }
 
+  if (isWeekend) {
+    return (
+      <div className="p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-8 max-w-sm w-full text-center">
+          <FaCalendarXmark className="text-amber-500 text-6xl mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">No Classes Today</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">It&apos;s {today} &mdash; university is off.</p>
+          <p className="text-slate-400 dark:text-slate-500 text-sm">Classes resume on Monday.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 md:p-6 lg:p-8">
       <div className="mb-5">
@@ -164,7 +181,7 @@ export default function MarkAttendancePage() {
             onChange={e => setManualToken(e.target.value.trim())}
             placeholder="Paste the QR code here…"
             rows={3}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 resize-none"
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700 resize-none"
           />
           <button
             onClick={() => submitAttendance(manualToken)}

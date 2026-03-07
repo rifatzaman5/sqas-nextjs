@@ -93,13 +93,13 @@ export default function StudentViewAttendancePage() {
           {/* Overall attendance badge */}
           {subjectCodes.length > 0 && (
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 mb-6 flex items-center gap-6">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold border-4 ${overallPercent >= 75 ? 'border-green-400 text-green-600 bg-green-50' : overallPercent >= 60 ? 'border-yellow-400 text-yellow-600 bg-yellow-50' : 'border-red-400 text-red-600 bg-red-50'}`}>
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold border-4 ${overallPercent >= 75 ? 'border-green-400 text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400 dark:border-green-600' : overallPercent >= 60 ? 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-600' : 'border-red-400 text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-600'}`}>
                 {overallPercent}%
               </div>
               <div>
                 <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">Overall Attendance</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Average across all subjects</p>
-                <p className={`text-sm font-medium mt-1 ${overallPercent >= 75 ? 'text-green-600' : overallPercent >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+                <p className={`text-sm font-medium mt-1 ${overallPercent >= 75 ? 'text-green-600 dark:text-green-400' : overallPercent >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
                   {overallPercent >= 75 ? '✓ Good standing' : overallPercent >= 60 ? '⚠ Needs improvement' : '✗ Below minimum — attendance required'}
                 </p>
               </div>

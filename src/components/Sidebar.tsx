@@ -70,10 +70,10 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
             href={item.href}
             onClick={onClose}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium mb-0.5 transition-all ${
-              active ? 'bg-white/20 text-white shadow-sm' : 'text-white/65 hover:bg-white/10 hover:text-white'
+              active ? 'bg-white/20 text-white shadow-sm' : 'text-white/75 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <span className={`text-base flex-shrink-0 ${active ? 'text-white' : 'text-white/50'}`}>{item.icon}</span>
+            <span className={`text-base flex-shrink-0 ${active ? 'text-white' : 'text-white/60'}`}>{item.icon}</span>
             {item.label}
           </Link>
         );
@@ -91,7 +91,7 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-none">SQAS</p>
-            <p className="text-white/55 text-[10px] leading-none mt-0.5 truncate max-w-[140px]">{name}</p>
+            <p className="text-white/70 text-[10px] leading-none mt-0.5 truncate max-w-[140px]">{name}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -125,8 +125,8 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/10">
           <div>
             <p className="text-white font-bold text-xl">SQAS</p>
-            <p className="text-white/55 text-xs mt-0.5">Smart Attendance System</p>
-            <p className="text-white/35 text-xs mt-0.5">University of Sargodha</p>
+            <p className="text-white/70 text-xs mt-0.5">Smart Attendance System</p>
+            <p className="text-white/50 text-xs mt-0.5">University of Sargodha</p>
           </div>
           <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white mt-0.5 transition-colors">
             <FaXmark size={18} />
@@ -146,9 +146,9 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
         <div className="p-3 border-t border-white/10">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white transition-all"
           >
-            <FaRightFromBracket className="text-white/50 text-base" />
+            <FaRightFromBracket className="text-white/60 text-base" />
             Sign Out
           </button>
         </div>
@@ -164,10 +164,10 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
             </div>
             <div>
               <p className="text-white font-bold text-base leading-none">SQAS</p>
-              <p className="text-white/50 text-[10px] leading-none mt-1">Smart QR Attendance</p>
+              <p className="text-white/60 text-[10px] leading-none mt-1">Smart QR Attendance</p>
             </div>
           </div>
-          <p className="text-white/35 text-[10px] mt-1">University of Sargodha</p>
+          <p className="text-white/50 text-[10px] mt-1">University of Sargodha</p>
         </div>
         {/* User */}
         <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3">
@@ -183,16 +183,16 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
         <div className="p-3 border-t border-white/10">
           <button
             onClick={toggleTheme}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all mb-1"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white transition-all mb-1"
           >
-            {isDark ? <FaSun className="text-white/50 text-base" /> : <FaMoon className="text-white/50 text-base" />}
+            {isDark ? <FaSun className="text-white/60 text-base" /> : <FaMoon className="text-white/60 text-base" />}
             {isDark ? 'Light Mode' : 'Dark Mode'}
           </button>
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white transition-all"
           >
-            <FaRightFromBracket className="text-white/50 text-base" />
+            <FaRightFromBracket className="text-white/60 text-base" />
             Sign Out
           </button>
         </div>

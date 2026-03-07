@@ -115,7 +115,7 @@ export default async function AdminDashboard() {
 
       <div className="p-4 bg-slate-800 dark:bg-slate-700 rounded-2xl text-white text-sm">
         <p className="font-semibold">SQAS &ndash; Smart Attendance System using QR Scanning</p>
-        <p className="text-slate-400 dark:text-slate-300 text-xs mt-1">Sania Nawaz (BSIT51F22S064) &middot; Sania Saeed (BSIT51F22S091) &middot; Waqar Ali (BSIT51F21R051RE) &middot; University of Sargodha</p>
+        <p className="text-slate-400 dark:text-slate-300 text-xs mt-1">BS Information Technology &middot; Regular 0 (2022-2026) &middot; Semester 8 &middot; University of Sargodha</p>
       </div>
     </div>
   );
