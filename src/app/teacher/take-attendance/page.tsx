@@ -279,22 +279,27 @@ export default function TakeAttendancePage() {
                 <div className="w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center">
                   <FaQrcode className="text-5xl text-slate-300 dark:text-slate-500" />
                 </div>
-                {selected ? (
+                {isWeekend ? (
+                  <div className="text-center">
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">QR generation is disabled on weekends</p>
+                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Come back on Monday to take attendance</p>
+                  </div>
+                ) : selected ? (
                   <>
                     <div className="text-center">
                       <p className="text-slate-700 dark:text-slate-200 font-medium">{selected.subjects?.name}</p>
                       <p className="text-slate-400 dark:text-slate-500 text-sm">{selected.day} &middot; {selected.start_time}&ndash;{selected.end_time} &middot; {selected.room}</p>
                       {selected.day !== today && (
-                        <p className="text-amber-600 dark:text-amber-400 text-xs mt-1 font-medium">This class is on {selected.day}, not today</p>
+                        <p className="text-red-600 dark:text-red-400 text-xs mt-1 font-medium">Cannot generate QR &mdash; this class is on {selected.day}, not today ({today})</p>
                       )}
                     </div>
                     <button
                       onClick={generateQR}
-                      disabled={generating}
-                      className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 font-medium"
+                      disabled={generating || selected.day !== today}
+                      className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >
                       <FaQrcode />
-                      {generating ? 'Generating\u2026' : 'Generate QR Code'}
+                      {generating ? 'Generating\u2026' : selected.day !== today ? 'Not Available Today' : 'Generate QR Code'}
                     </button>
                   </>
                 ) : (

@@ -13,12 +13,19 @@ export async function POST(req: NextRequest) {
   // Verify timetable belongs to this teacher
   const { data: slot } = await supabaseAdmin
     .from('timetable')
-    .select('id, subject_id, teacher_id')
+    .select('id, subject_id, teacher_id, day')
     .eq('id', timetable_id)
     .eq('teacher_id', session.id)
     .single();
 
   if (!slot) return NextResponse.json({ error: 'Timetable slot not found' }, { status: 404 });
+
+  // Only allow QR generation on the correct day
+  const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const todayName = WEEKDAYS[new Date().getDay()];
+  if (slot.day !== todayName) {
+    return NextResponse.json({ error: `Cannot generate QR — this class is on ${slot.day}, not today (${todayName})` }, { status: 400 });
+  }
 
   // Read attendance window from settings (default 15 min)
   const { data: settings } = await supabaseAdmin.from('settings').select('attendance_window').eq('id', 1).single();
