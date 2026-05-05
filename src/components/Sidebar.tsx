@@ -1,7 +1,7 @@
 ﻿'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTheme } from '@/hooks/useTheme';
 import {
@@ -51,6 +51,26 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
   const { isDark, toggle: toggleTheme } = useTheme();
   const nav = navMap[role];
   const cfg = roleConfig[role];
+
+  // Lock body scroll while the mobile drawer is open so the page behind
+  // doesn't scroll/overflow when the user pans on the overlay.
+  useEffect(() => {
+    if (!open) return;
+    const { body } = document;
+    const prevOverflow = body.style.overflow;
+    const prevPaddingRight = body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`;
+    return () => {
+      body.style.overflow = prevOverflow;
+      body.style.paddingRight = prevPaddingRight;
+    };
+  }, [open]);
+
+  // Close the drawer on route change (in case the user opens a link and the
+  // drawer state is somehow preserved).
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -115,13 +135,14 @@ export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 's
       {/* â”€â”€ Mobile overlay â”€â”€ */}
       {open && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 touch-none overscroll-contain"
           onClick={() => setOpen(false)}
+          onTouchMove={(e) => e.preventDefault()}
         />
       )}
 
       {/* â”€â”€ Mobile slide-out drawer â”€â”€ */}
-      <div className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 flex flex-col bg-gradient-to-b ${cfg.sidebar} shadow-2xl transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 flex flex-col bg-gradient-to-b ${cfg.sidebar} shadow-2xl transform transition-transform duration-300 ease-in-out overscroll-contain ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Drawer header */}
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/10">
           <div>
