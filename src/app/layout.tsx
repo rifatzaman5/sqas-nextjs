@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
@@ -11,6 +11,13 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "SQAS – Smart Attendance System using QR Scanning",
   description: "Smart QR Attendance – University of Sargodha, Dept. of IT",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({
