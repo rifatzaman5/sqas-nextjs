@@ -102,7 +102,7 @@ export default function AdminAttendancePage() {
       {Object.keys(subjectStats).length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {Object.values(subjectStats).map(s => (
-            <span key={s.code} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
+            <span key={s.code} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f0f9fa] dark:bg-[#1a869a]/20 text-[#007b8f] dark:text-blue-300 rounded-full text-xs font-medium">
               <span className="font-mono">{s.code}</span>
               <span className="bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-full px-1.5 py-0.5 text-xs font-bold">{s.count}</span>
             </span>
@@ -116,21 +116,21 @@ export default function AdminAttendancePage() {
           type="date"
           value={filter.date}
           onChange={e => setFilter({ ...filter, date: e.target.value })}
-          className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
+          className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         />
         <input
           type="text"
           placeholder="Filter by subject…"
           value={filter.subject}
           onChange={e => setFilter({ ...filter, subject: e.target.value })}
-          className="flex-1 min-w-[140px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
+          className="flex-1 min-w-[140px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         />
         <input
           type="text"
           placeholder="Filter by student / enrollment…"
           value={filter.student}
           onChange={e => setFilter({ ...filter, student: e.target.value })}
-          className="flex-1 min-w-[160px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
+          className="flex-1 min-w-[160px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         />
         {(filter.date || filter.subject || filter.student) && (
           <button
@@ -160,14 +160,14 @@ export default function AdminAttendancePage() {
                   <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
                     <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.date}</td>
                     <td className="px-4 py-3 text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.students?.name}</td>
-                    <td className="px-4 py-3 font-mono text-blue-600 dark:text-blue-400 text-xs whitespace-nowrap">{r.students?.enrollment_no}</td>
+                    <td className="px-4 py-3 font-mono text-[#007b8f] dark:text-[#00b8c5] text-xs whitespace-nowrap">{r.students?.enrollment_no}</td>
                     <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
                       {r.subjects?.name} <span className="text-slate-400 dark:text-slate-500 text-xs">({r.subjects?.code})</span>
                     </td>
                     <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs whitespace-nowrap">{r.teachers?.name}</td>
                     <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">{r.timetable?.start_time}</td>
                     <td className="px-4 py-3">
-                      <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{r.status}</span>
+                      <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium capitalize">{r.status}</span>
                     </td>
                   </tr>
                 ))}

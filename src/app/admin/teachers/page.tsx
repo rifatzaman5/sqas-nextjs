@@ -38,7 +38,7 @@ export default function TeachersPage() {
     <div className="p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-5">
         <div><h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Teachers</h1><p className="text-slate-500 dark:text-slate-400 text-sm">{teachers.length} total</p></div>
-        <button onClick={openAdd} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 text-sm font-medium"><FaPlus className="text-xs" />Add Teacher</button>
+        <button onClick={openAdd} className="flex items-center gap-2 bg-[#007b8f] text-white px-4 py-2.5 rounded-xl hover:bg-[#007990] text-sm font-medium"><FaPlus className="text-xs" />Add Teacher</button>
       </div>
 
       {/* Mobile card view */}
@@ -51,7 +51,7 @@ export default function TeachersPage() {
                 <p className="text-xs text-slate-400 dark:text-slate-500">{t.designation} · {t.department}</p>
               </div>
               <div className="flex gap-1">
-                <button onClick={() => openEdit(t)} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
+                <button onClick={() => openEdit(t)} className="p-2 text-[#007b8f] hover:bg-[#f0f9fa] dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
                 <button onClick={() => handleDelete(t.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
               </div>
             </div>
@@ -69,14 +69,14 @@ export default function TeachersPage() {
           <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
             {teachers.map(t => (
               <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                <td className="px-4 py-3 font-mono text-indigo-600 dark:text-indigo-400 font-medium">{t.id}</td>
+                <td className="px-4 py-3 font-mono text-[#007b8f] dark:text-[#00b8c5] font-medium">{t.id}</td>
                 <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{t.name}</td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{t.designation}</td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{t.department}</td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{t.subject || '—'}</td>
                 <td className="px-4 py-3 text-slate-400 dark:text-slate-500">{t.email || '—'}</td>
                 <td className="px-4 py-3"><div className="flex gap-2">
-                  <button onClick={() => openEdit(t)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
+                  <button onClick={() => openEdit(t)} className="p-1.5 text-[#007b8f] hover:bg-[#f0f9fa] dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
                   <button onClick={() => handleDelete(t.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
                 </div></td>
               </tr>
@@ -109,13 +109,13 @@ export default function TeachersPage() {
                     value={(form as Record<string, unknown>)[f.key] as string || ''}
                     onChange={e => setForm({ ...form, [f.key]: e.target.value })}
                     required={f.required}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700"
                   />
                 </div>
               ))}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setModal(false)} className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">Cancel</button>
-                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50">
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-[#007b8f] text-white rounded-lg text-sm hover:bg-[#007990] disabled:opacity-50">
                   {loading ? 'Saving…' : editing ? 'Update' : 'Add'}
                 </button>
               </div>

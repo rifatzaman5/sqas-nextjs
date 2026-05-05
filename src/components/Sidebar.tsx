@@ -37,10 +37,11 @@ const studentNav: NavItem[] = [
 
 const navMap = { admin: adminNav, teacher: teacherNav, student: studentNav };
 
+// Minimal unified brand: deep teal sidebar across all roles, role differentiated by icon + badge tint
 const roleConfig = {
-  admin:   { bar: 'from-indigo-700 to-indigo-900', sidebar: 'from-indigo-700 to-indigo-900', accent: 'bg-indigo-600', badge: 'Admin',   badgeColor: 'bg-indigo-100 text-indigo-700', icon: <FaShieldHalved className="text-indigo-200" /> },
-  teacher: { bar: 'from-blue-600 to-blue-800',     sidebar: 'from-blue-600 to-blue-800',     accent: 'bg-blue-600',   badge: 'Teacher', badgeColor: 'bg-blue-100 text-blue-700',     icon: <FaChalkboardUser className="text-blue-200" /> },
-  student: { bar: 'from-emerald-600 to-emerald-800', sidebar: 'from-emerald-600 to-emerald-800', accent: 'bg-emerald-600', badge: 'Student', badgeColor: 'bg-emerald-100 text-emerald-700', icon: <FaGraduationCap className="text-emerald-200" /> },
+  admin:   { bar: 'from-[#1a869a] to-[#007b8f]', sidebar: 'from-[#1a869a] to-[#007b8f]', accent: 'bg-[#007990]', badge: 'Admin',   badgeColor: 'bg-white/15 text-white border border-white/20', icon: <FaShieldHalved className="text-white/90" /> },
+  teacher: { bar: 'from-[#1a869a] to-[#007b8f]', sidebar: 'from-[#1a869a] to-[#007b8f]', accent: 'bg-[#00b8c5]', badge: 'Teacher', badgeColor: 'bg-white/15 text-white border border-white/20', icon: <FaChalkboardUser className="text-white/90" /> },
+  student: { bar: 'from-[#1a869a] to-[#007b8f]', sidebar: 'from-[#1a869a] to-[#007b8f]', accent: 'bg-[#448843]', badge: 'Student', badgeColor: 'bg-white/15 text-white border border-white/20', icon: <FaGraduationCap className="text-white/90" /> },
 };
 
 export default function Sidebar({ role, name }: { role: 'admin' | 'teacher' | 'student'; name: string }) {

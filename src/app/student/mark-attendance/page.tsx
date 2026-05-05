@@ -113,15 +113,15 @@ export default function MarkAttendancePage() {
       <div className="p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-8 max-w-sm w-full text-center">
           {result.success ? (
-            <FaCircleCheck className="text-green-500 text-6xl mx-auto mb-4" />
+            <FaCircleCheck className="text-[#448843] text-6xl mx-auto mb-4" />
           ) : (
             <FaCircleXmark className="text-red-500 text-6xl mx-auto mb-4" />
           )}
-          <h2 className={`text-xl font-bold mb-2 ${result.success ? 'text-green-700' : 'text-red-700'}`}>
+          <h2 className={`text-xl font-bold mb-2 ${result.success ? 'text-[#3a7438]' : 'text-red-700'}`}>
             {result.success ? 'Attendance Marked!' : 'Failed'}
           </h2>
           <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">{result.message}</p>
-          <button onClick={reset} className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700">
+          <button onClick={reset} className="px-6 py-3 bg-[#448843] text-white rounded-xl font-medium hover:bg-[#3a7438]">
             {result.success ? 'Done' : 'Try Again'}
           </button>
         </div>
@@ -147,8 +147,8 @@ export default function MarkAttendancePage() {
       <div className="mb-5">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Mark Attendance</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm">Scan the QR code shown by your teacher</p>
-        {!location && <p className="text-xs text-orange-500 mt-1">⚠️ Location not available — attendance may be rejected by proximity check</p>}
-        {location && <p className="text-xs text-green-600 mt-1">✓ Location detected</p>}
+        {!location && <p className="text-xs text-[#94ad3b] mt-1">⚠️ Location not available — attendance may be rejected by proximity check</p>}
+        {location && <p className="text-xs text-[#3a7438] mt-1">✓ Location detected</p>}
         {deviceId ? (
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">📱 Device ID: <span className="font-mono">{deviceId.slice(0, 8)}…</span></p>
         ) : (
@@ -158,10 +158,10 @@ export default function MarkAttendancePage() {
 
       {/* Tabs */}
       <div className="flex gap-2 mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-1 w-fit shadow-sm">
-        <button onClick={() => setTab('camera')} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === 'camera' ? 'bg-emerald-600 text-white shadow' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
+        <button onClick={() => setTab('camera')} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === 'camera' ? 'bg-[#448843] text-white shadow' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
           <FaCamera /> Scan QR
         </button>
-        <button onClick={() => setTab('manual')} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === 'manual' ? 'bg-emerald-600 text-white shadow' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
+        <button onClick={() => setTab('manual')} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === 'manual' ? 'bg-[#448843] text-white shadow' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
           <FaKeyboard /> Enter Code
         </button>
       </div>
@@ -175,12 +175,12 @@ export default function MarkAttendancePage() {
             style={{ minHeight: 280 }}
           />
           {scanning && (
-            <div className="flex items-center justify-center gap-2 text-sm text-emerald-600">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            <div className="flex items-center justify-center gap-2 text-sm text-[#3a7438]">
+              <div className="w-2 h-2 bg-[#448843] rounded-full animate-pulse" />
               Camera active — point at QR code
             </div>
           )}
-          {submitting && <p className="text-center text-sm text-blue-600 mt-2">Verifying attendance…</p>}
+          {submitting && <p className="text-center text-sm text-[#007b8f] mt-2">Verifying attendance…</p>}
         </div>
       )}
 
@@ -193,12 +193,12 @@ export default function MarkAttendancePage() {
             onChange={e => setManualToken(e.target.value.trim())}
             placeholder="Paste the QR code here…"
             rows={3}
-            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700 resize-none"
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#448843] text-slate-800 dark:text-slate-100 dark:bg-slate-700 resize-none"
           />
           <button
             onClick={() => submitAttendance(manualToken)}
             disabled={!manualToken || submitting}
-            className="mt-4 w-full bg-emerald-600 text-white py-3 rounded-xl font-medium hover:bg-emerald-700 disabled:opacity-50"
+            className="mt-4 w-full bg-[#448843] text-white py-3 rounded-xl font-medium hover:bg-[#3a7438] disabled:opacity-50"
           >
             {submitting ? 'Verifying…' : 'Submit Attendance'}
           </button>

@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx next build:*)"
+      "Bash(npx next build:*)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\HP\\\\Desktop\\\\sqas-nextjs\" -Recurse -Filter \"*.sql\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -First 20)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" status)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" diff --stat)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" add src/app/admin/students/page.tsx src/app/api/qr/verify/route.ts src/app/student/mark-attendance/page.tsx supabase_schema.sql src/app/api/students/device-reset/route.ts src/lib/deviceId.ts supabase_migration_security.sql)",
+      "Bash(git -C /c/Users/HP/Desktop/sqas-nextjs commit -m ' *)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" push origin main)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" add src/app/login/page.tsx src/app/globals.css)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" add src/app/login/page.tsx src/app/layout.tsx)",
+      "Bash(git -C \"/c/Users/HP/Desktop/sqas-nextjs\" add -A)"
     ]
   }
 }

@@ -5,9 +5,9 @@ import toast from 'react-hot-toast';
 import { FaShieldHalved, FaChalkboardUser, FaGraduationCap, FaQrcode, FaEye, FaEyeSlash } from 'react-icons/fa6';
 
 const ROLES = [
-  { key: 'admin',   label: 'Admin',   icon: <FaShieldHalved />,   color: 'from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600' },
-  { key: 'teacher', label: 'Teacher', icon: <FaChalkboardUser />, color: 'from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500' },
-  { key: 'student', label: 'Student', icon: <FaGraduationCap />,  color: 'from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500' },
+  { key: 'admin',   label: 'Admin',   icon: <FaShieldHalved />,   color: 'from-[#007b8f] to-[#1a869a] hover:from-[#007990] hover:to-[#0d7d92]' },
+  { key: 'teacher', label: 'Teacher', icon: <FaChalkboardUser />, color: 'from-[#1a869a] to-[#00b8c5] hover:from-[#0d7d92] hover:to-[#00a3af]' },
+  { key: 'student', label: 'Student', icon: <FaGraduationCap />,  color: 'from-[#448843] to-[#a8c243] hover:from-[#3a7438] hover:to-[#94ad3b]' },
 ] as const;
 
 const BG_IMAGE = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80';
@@ -51,15 +51,15 @@ export default function LoginPage() {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url('${BG_IMAGE}')` }}
       />
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-indigo-950/85 to-slate-950/95" />
+      {/* Dark teal overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#063a47]/95 via-[#007b8f]/80 to-[#063a47]/95" />
 
-      {/* Animated floating blobs (smaller on mobile) */}
+      {/* Animated floating blobs (minimal teal/forest palette) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 -left-20 w-56 h-56 sm:w-96 sm:h-96 rounded-full bg-indigo-500/30 blur-3xl animate-blob" />
-        <div className="absolute top-1/3 -right-24 w-64 h-64 sm:w-[28rem] sm:h-[28rem] rounded-full bg-emerald-500/25 blur-3xl animate-blob-2 animation-delay-2" />
-        <div className="absolute -bottom-24 left-1/4 w-60 h-60 sm:w-[26rem] sm:h-[26rem] rounded-full bg-blue-500/25 blur-3xl animate-blob animation-delay-4" />
-        <div className="absolute top-1/4 left-1/2 w-44 h-44 sm:w-72 sm:h-72 rounded-full bg-fuchsia-500/20 blur-3xl animate-blob-2 animation-delay-6" />
+        <div className="absolute -top-20 -left-20 w-56 h-56 sm:w-96 sm:h-96 rounded-full bg-[#1a869a]/35 blur-3xl animate-blob" />
+        <div className="absolute top-1/3 -right-24 w-64 h-64 sm:w-[28rem] sm:h-[28rem] rounded-full bg-[#448843]/25 blur-3xl animate-blob-2 animation-delay-2" />
+        <div className="absolute -bottom-24 left-1/4 w-60 h-60 sm:w-[26rem] sm:h-[26rem] rounded-full bg-[#00b8c5]/25 blur-3xl animate-blob animation-delay-4" />
+        <div className="absolute top-1/4 left-1/2 w-44 h-44 sm:w-72 sm:h-72 rounded-full bg-[#a8c243]/20 blur-3xl animate-blob-2 animation-delay-6" />
       </div>
 
       {/* Faint orbiting rings (hidden on smallest screens to avoid clutter) */}
@@ -99,7 +99,7 @@ export default function LoginPage() {
                 <span className={`text-lg sm:text-xl transition-transform ${form.role === r.key ? 'scale-110' : ''}`}>{r.icon}</span>
                 {r.label}
                 {form.role === r.key && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 sm:w-10 h-0.5 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full" />
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 sm:w-10 h-0.5 bg-gradient-to-r from-[#00b8c5] to-[#a8c243] rounded-full" />
                 )}
               </button>
             ))}

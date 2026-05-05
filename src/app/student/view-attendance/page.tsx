@@ -25,13 +25,13 @@ interface SubjectSummary {
 }
 
 function percentColor(p: number) {
-  if (p >= 75) return 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400';
+  if (p >= 75) return 'text-[#3a7438] bg-green-50 dark:bg-green-900/30 dark:text-[#a8c243]';
   if (p >= 60) return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400';
   return 'text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400';
 }
 
 function ProgressBar({ percent }: { percent: number }) {
-  const color = percent >= 75 ? 'bg-green-500' : percent >= 60 ? 'bg-yellow-500' : 'bg-red-500';
+  const color = percent >= 75 ? 'bg-[#448843]' : percent >= 60 ? 'bg-yellow-500' : 'bg-red-500';
   return (
     <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mt-2">
       <div className={`${color} h-2 rounded-full transition-all`} style={{ width: `${Math.min(percent, 100)}%` }} />
@@ -93,13 +93,13 @@ export default function StudentViewAttendancePage() {
           {/* Overall attendance badge */}
           {subjectCodes.length > 0 && (
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 mb-6 flex items-center gap-6">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold border-4 ${overallPercent >= 75 ? 'border-green-400 text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400 dark:border-green-600' : overallPercent >= 60 ? 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-600' : 'border-red-400 text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-600'}`}>
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold border-4 ${overallPercent >= 75 ? 'border-green-400 text-[#3a7438] bg-green-50 dark:bg-green-900/30 dark:text-[#a8c243] dark:border-green-600' : overallPercent >= 60 ? 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-600' : 'border-red-400 text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-600'}`}>
                 {overallPercent}%
               </div>
               <div>
                 <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">Overall Attendance</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Average across all subjects</p>
-                <p className={`text-sm font-medium mt-1 ${overallPercent >= 75 ? 'text-green-600 dark:text-green-400' : overallPercent >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
+                <p className={`text-sm font-medium mt-1 ${overallPercent >= 75 ? 'text-[#3a7438] dark:text-[#a8c243]' : overallPercent >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
                   {overallPercent >= 75 ? '✓ Good standing' : overallPercent >= 60 ? '⚠ Needs improvement' : '✗ Below minimum — attendance required'}
                 </p>
               </div>
@@ -137,7 +137,7 @@ export default function StudentViewAttendancePage() {
           {/* Filter indicator */}
           {filterSubject && (
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-sm text-blue-600 font-medium">Showing: {summary[filterSubject]?.name}</span>
+              <span className="text-sm text-[#007b8f] font-medium">Showing: {summary[filterSubject]?.name}</span>
               <button onClick={() => setFilterSubject('')} className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 underline">Clear filter</button>
             </div>
           )}
@@ -162,7 +162,7 @@ export default function StudentViewAttendancePage() {
                       {r.timetable?.day} {r.timetable?.start_time}–{r.timetable?.end_time}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full text-xs font-medium">Present</span>
+                      <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium">Present</span>
                     </td>
                   </tr>
                 ))}

@@ -3,13 +3,23 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f1f5f9;
+  --background: #f6f9f9;
   --foreground: #0f172a;
+
+  /* Minimal brand palette — teal + forest */
+  --brand: #1a869a;          /* primary teal */
+  --brand-dark: #007b8f;     /* deep teal — headings, hover */
+  --brand-darker: #007990;   /* slightly darker for shadows/active */
+  --brand-cyan: #00b8c5;     /* light teal accent */
+  --brand-forest: #448843;   /* forest green — success */
+  --brand-moss: #a8c243;     /* moss — subtle highlight */
+  --brand-soft: #e0f2f4;     /* very light teal — surfaces */
 }
 
 .dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
+  --background: #0b1820;
+  --foreground: #e2efef;
+  --brand-soft: rgba(26, 134, 154, 0.15);
 }
 
 @theme inline {

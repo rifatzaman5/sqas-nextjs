@@ -79,7 +79,7 @@ export default function TeacherViewAttendancePage() {
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Attendance Records</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm">{filtered.length} records · {uniqueDates} dates · {uniqueStudents} students</p>
         </div>
-        <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm hover:bg-emerald-700">
+        <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 bg-[#448843] text-white rounded-xl text-sm hover:bg-[#3a7438]">
           <FaDownload className="text-xs" /> Export CSV
         </button>
       </div>
@@ -91,14 +91,14 @@ export default function TeacherViewAttendancePage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)}
-            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700" />
+            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700" />
           <select value={filterSubject} onChange={e => setFilterSubject(e.target.value)}
-            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700">
+            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700">
             <option value="">All Subjects</option>
             {subjects.map(s => <option key={s.id} value={s.id}>{s.name} ({s.code})</option>)}
           </select>
           <input type="text" placeholder="Search student name / enrollment…" value={searchStudent} onChange={e => setSearchStudent(e.target.value)}
-            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700" />
+            className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700" />
         </div>
         {(filterDate || filterSubject || searchStudent) && (
           <button onClick={() => { setFilterDate(''); setFilterSubject(''); setSearchStudent(''); }} className="mt-2 text-xs text-red-500 hover:underline">
@@ -121,7 +121,7 @@ export default function TeacherViewAttendancePage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-slate-500 dark:text-slate-400">{group.date}</span>
-                  <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-0.5 rounded-full text-xs font-semibold">{group.records.length} present</span>
+                  <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2.5 py-0.5 rounded-full text-xs font-semibold">{group.records.length} present</span>
                 </div>
               </div>
               <div className="divide-y divide-slate-50 dark:divide-slate-700">
@@ -132,7 +132,7 @@ export default function TeacherViewAttendancePage() {
                       <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{r.students?.name}</p>
                       <p className="text-xs text-slate-400 dark:text-slate-500 font-mono">{r.students?.enrollment_no}</p>
                     </div>
-                    <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded text-xs">Present</span>
+                    <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded text-xs">Present</span>
                   </div>
                 ))}
               </div>

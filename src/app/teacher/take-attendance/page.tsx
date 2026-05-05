@@ -154,7 +154,7 @@ export default function TakeAttendancePage() {
     : null;
 
   const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
-  const urgency = secondsLeft < 60 ? 'text-red-600' : secondsLeft < 180 ? 'text-orange-500' : 'text-green-600';
+  const urgency = secondsLeft < 60 ? 'text-red-600' : secondsLeft < 180 ? 'text-[#94ad3b]' : 'text-[#3a7438]';
 
   // Group: today's classes first, then rest of the week
   const todaySlots = slots.filter(s => s.day === today);
@@ -192,7 +192,7 @@ export default function TakeAttendancePage() {
           <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <h2 className="font-semibold text-slate-700 dark:text-slate-200">Your Classes</h2>
             {!isWeekend && todaySlots.length > 0 && (
-              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full text-xs font-medium">
+              <span className="bg-[#e0f2f4] dark:bg-[#1a869a]/30 text-[#007b8f] dark:text-[#00b8c5] px-2 py-0.5 rounded-full text-xs font-medium">
                 {todaySlots.length} today
               </span>
             )}
@@ -201,8 +201,8 @@ export default function TakeAttendancePage() {
             {/* Today's classes */}
             {!isWeekend && todaySlots.length > 0 && (
               <div>
-                <p className="px-5 py-2 text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase bg-blue-50 dark:bg-blue-900/20 sticky top-0 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                <p className="px-5 py-2 text-xs font-semibold text-[#007b8f] dark:text-[#00b8c5] uppercase bg-[#f0f9fa] dark:bg-[#1a869a]/20 sticky top-0 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#1a869a] animate-pulse" />
                   Today &mdash; {today}
                 </p>
                 {todaySlots.map(slot => {
@@ -212,7 +212,7 @@ export default function TakeAttendancePage() {
                       key={slot.id}
                       onClick={() => { setSelected(slot); setQrToken(''); setExpiresAt(null); setAttendees([]); stopPolling(); }}
                       className={`flex items-center gap-3 px-5 py-3 cursor-pointer transition-colors
-                        ${selected?.id === slot.id ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500' : 'hover:bg-blue-50 dark:hover:bg-blue-900/20'}
+                        ${selected?.id === slot.id ? 'bg-[#f0f9fa] dark:bg-[#1a869a]/20 border-l-4 border-[#1a869a]' : 'hover:bg-[#f0f9fa] dark:hover:bg-blue-900/20'}
                         ${status === 'past' ? 'opacity-50' : ''}`}
                     >
                       <div className="flex-1 min-w-0">
@@ -221,7 +221,7 @@ export default function TakeAttendancePage() {
                             {slot.subjects?.name} <span className="text-xs text-slate-400 dark:text-slate-500">({slot.subjects?.code})</span>
                           </p>
                           {status === 'active' && (
-                            <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex-shrink-0">Now</span>
+                            <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex-shrink-0">Now</span>
                           )}
                           {status === 'upcoming' && (
                             <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex-shrink-0">Next</span>
@@ -232,7 +232,7 @@ export default function TakeAttendancePage() {
                         </div>
                         <p className="text-xs text-slate-500 dark:text-slate-400">{slot.start_time}&ndash;{slot.end_time} &middot; {slot.room}</p>
                       </div>
-                      {selected?.id === slot.id && <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />}
+                      {selected?.id === slot.id && <span className="w-2 h-2 rounded-full bg-[#1a869a] flex-shrink-0" />}
                     </div>
                   );
                 })}
@@ -255,13 +255,13 @@ export default function TakeAttendancePage() {
                     key={slot.id}
                     onClick={() => { setSelected(slot); setQrToken(''); setExpiresAt(null); setAttendees([]); stopPolling(); }}
                     className={`flex items-center gap-3 px-5 py-3 cursor-pointer transition-colors opacity-60
-                      ${selected?.id === slot.id ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 opacity-100' : 'hover:bg-slate-50 dark:hover:bg-slate-700/30'}`}
+                      ${selected?.id === slot.id ? 'bg-[#f0f9fa] dark:bg-[#1a869a]/20 border-l-4 border-[#1a869a] opacity-100' : 'hover:bg-slate-50 dark:hover:bg-slate-700/30'}`}
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{slot.subjects?.name} <span className="text-xs text-slate-400 dark:text-slate-500">({slot.subjects?.code})</span></p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">{slot.start_time}&ndash;{slot.end_time} &middot; {slot.room}</p>
                     </div>
-                    {selected?.id === slot.id && <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />}
+                    {selected?.id === slot.id && <span className="w-2 h-2 rounded-full bg-[#1a869a] flex-shrink-0" />}
                   </div>
                 ))}
               </div>
@@ -296,7 +296,7 @@ export default function TakeAttendancePage() {
                     <button
                       onClick={generateQR}
                       disabled={generating || selected.day !== today}
-                      className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                      className="flex items-center gap-2 bg-[#1a869a] text-white px-6 py-3 rounded-xl hover:bg-[#007b8f] disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >
                       <FaQrcode />
                       {generating ? 'Generating\u2026' : selected.day !== today ? 'Not Available Today' : 'Generate QR Code'}
@@ -327,13 +327,13 @@ export default function TakeAttendancePage() {
 
                 {/* Actions */}
                 <div className="flex flex-wrap gap-2 justify-center mb-3">
-                  <button onClick={generateQR} disabled={generating} className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-xl text-sm hover:bg-blue-700 disabled:opacity-50">
+                  <button onClick={generateQR} disabled={generating} className="flex items-center gap-1.5 px-3 py-2 bg-[#1a869a] text-white rounded-xl text-sm hover:bg-[#007b8f] disabled:opacity-50">
                     <FaArrowsRotate className="text-xs" /> Refresh
                   </button>
                   <button onClick={copyToken} className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm hover:bg-slate-200 dark:hover:bg-slate-600">
                     <FaCopy className="text-xs" /> Copy
                   </button>
-                  <button onClick={shareWhatsApp} className="flex items-center gap-1.5 px-3 py-2 bg-green-500 text-white rounded-xl text-sm hover:bg-green-600">
+                  <button onClick={shareWhatsApp} className="flex items-center gap-1.5 px-3 py-2 bg-[#448843] text-white rounded-xl text-sm hover:bg-green-600">
                     <FaWhatsapp /> WhatsApp
                   </button>
                 </div>
@@ -352,11 +352,11 @@ export default function TakeAttendancePage() {
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
               <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#448843] animate-pulse" />
                   <h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Live Attendance</h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                  <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
                     <FaUsers className="text-xs" /> {liveCount} present
                   </span>
                   <span className="text-xs text-slate-400 dark:text-slate-500">auto-refresh 5s</span>
@@ -370,7 +370,7 @@ export default function TakeAttendancePage() {
                     {attendees.map((a, i) => (
                       <div key={a.id} className="flex items-center gap-3 px-5 py-2.5">
                         <span className="text-xs text-slate-400 dark:text-slate-500 w-5">{i + 1}</span>
-                        <FaCircleCheck className="text-green-500 text-sm flex-shrink-0" />
+                        <FaCircleCheck className="text-[#448843] text-sm flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{a.students?.name}</p>
                           <p className="text-xs font-mono text-slate-400 dark:text-slate-500">{a.students?.enrollment_no}</p>

@@ -23,19 +23,19 @@ export default async function AdminDashboard() {
   const stats = await getStats();
 
   const statCards = [
-    { label: 'Total Students',  value: stats.students,  bg: 'bg-blue-500',    icon: <FaGraduationCap className="text-white text-lg" />, href: '/admin/students' },
-    { label: 'Total Teachers',  value: stats.teachers,  bg: 'bg-violet-500',  icon: <FaChalkboardUser className="text-white text-lg" />, href: '/admin/teachers' },
-    { label: 'Total Subjects',  value: stats.subjects,  bg: 'bg-orange-500',  icon: <FaBook className="text-white text-lg" />,           href: '/admin/subjects' },
-    { label: "Today's Present", value: stats.todayAtt,  bg: 'bg-emerald-500', icon: <FaCircleCheck className="text-white text-lg" />,    href: '/admin/attendance' },
+    { label: 'Total Students',  value: stats.students,  bg: 'bg-[#1a869a]', icon: <FaGraduationCap className="text-white text-lg" />, href: '/admin/students' },
+    { label: 'Total Teachers',  value: stats.teachers,  bg: 'bg-[#007b8f]', icon: <FaChalkboardUser className="text-white text-lg" />, href: '/admin/teachers' },
+    { label: 'Total Subjects',  value: stats.subjects,  bg: 'bg-[#00b8c5]', icon: <FaBook className="text-white text-lg" />,           href: '/admin/subjects' },
+    { label: "Today's Present", value: stats.todayAtt,  bg: 'bg-[#448843]', icon: <FaCircleCheck className="text-white text-lg" />,    href: '/admin/attendance' },
   ];
 
   const quickLinks = [
-    { href: '/admin/students',   label: 'Students',   icon: <FaGraduationCap />, color: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 border-blue-100 dark:border-blue-800' },
-    { href: '/admin/teachers',   label: 'Teachers',   icon: <FaChalkboardUser />,color: 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/30 hover:bg-violet-100 dark:hover:bg-violet-900/50 border-violet-100 dark:border-violet-800' },
-    { href: '/admin/subjects',   label: 'Subjects',   icon: <FaBook />,          color: 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 hover:bg-orange-100 dark:hover:bg-orange-900/50 border-orange-100 dark:border-orange-800' },
-    { href: '/admin/timetable',  label: 'Timetable',  icon: <FaCalendarDays />,  color: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/50 border-green-100 dark:border-green-800' },
-    { href: '/admin/attendance', label: 'Attendance', icon: <FaClipboardList />, color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border-emerald-100 dark:border-emerald-800' },
-    { href: '/admin/settings',   label: 'Settings',   icon: <FaGear />,          color: 'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-100 dark:border-slate-700' },
+    { href: '/admin/students',   label: 'Students',   icon: <FaGraduationCap />, color: 'text-[#007b8f] dark:text-[#00b8c5] bg-[#e0f2f4] dark:bg-[#1a869a]/20 hover:bg-[#cce8eb] dark:hover:bg-[#1a869a]/30 border-[#b8dde1] dark:border-[#1a869a]/40' },
+    { href: '/admin/teachers',   label: 'Teachers',   icon: <FaChalkboardUser />,color: 'text-[#007b8f] dark:text-[#00b8c5] bg-[#e0f2f4] dark:bg-[#1a869a]/20 hover:bg-[#cce8eb] dark:hover:bg-[#1a869a]/30 border-[#b8dde1] dark:border-[#1a869a]/40' },
+    { href: '/admin/subjects',   label: 'Subjects',   icon: <FaBook />,          color: 'text-[#3a7438] dark:text-[#a8c243] bg-[#eef5e3] dark:bg-[#448843]/20 hover:bg-[#dfecc9] dark:hover:bg-[#448843]/30 border-[#cfe0a8] dark:border-[#448843]/40' },
+    { href: '/admin/timetable',  label: 'Timetable',  icon: <FaCalendarDays />,  color: 'text-[#3a7438] dark:text-[#a8c243] bg-[#eef5e3] dark:bg-[#448843]/20 hover:bg-[#dfecc9] dark:hover:bg-[#448843]/30 border-[#cfe0a8] dark:border-[#448843]/40' },
+    { href: '/admin/attendance', label: 'Attendance', icon: <FaClipboardList />, color: 'text-[#007b8f] dark:text-[#00b8c5] bg-[#e0f2f4] dark:bg-[#1a869a]/20 hover:bg-[#cce8eb] dark:hover:bg-[#1a869a]/30 border-[#b8dde1] dark:border-[#1a869a]/40' },
+    { href: '/admin/settings',   label: 'Settings',   icon: <FaGear />,          color: 'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700' },
   ];
 
   return (
@@ -68,7 +68,7 @@ export default async function AdminDashboard() {
             <p className="text-xl font-bold text-slate-800 dark:text-slate-100">{stats.attendance}</p>
           </div>
         </div>
-        <Link href="/admin/attendance" className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap">View All &rarr;</Link>
+        <Link href="/admin/attendance" className="px-3 py-1.5 bg-[#1a869a] text-white rounded-lg text-xs font-semibold hover:bg-[#007b8f] transition-colors whitespace-nowrap">View All &rarr;</Link>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5 mb-5">
@@ -89,7 +89,7 @@ export default async function AdminDashboard() {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
           <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <h2 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Recent Attendance</h2>
-            <Link href="/admin/attendance" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">View all &rarr;</Link>
+            <Link href="/admin/attendance" className="text-xs text-[#007b8f] dark:text-[#00b8c5] hover:underline">View all &rarr;</Link>
           </div>
           <div className="divide-y divide-slate-50 dark:divide-slate-700/50">
             {stats.recent.length ? stats.recent.map((r) => {
@@ -101,7 +101,7 @@ export default async function AdminDashboard() {
                     <p className="text-xs text-slate-400 dark:text-slate-500">{rec.subjects?.name} &middot; {rec.students?.enrollment_no}</p>
                   </div>
                   <div className="text-right flex-shrink-0 ml-3">
-                    <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full">Present</span>
+                    <span className="text-xs bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full">Present</span>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{rec.date}</p>
                   </div>
                 </div>
@@ -113,9 +113,9 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      <div className="p-4 bg-slate-800 dark:bg-slate-700 rounded-2xl text-white text-sm">
+      <div className="p-4 bg-gradient-to-r from-[#007b8f] to-[#1a869a] rounded-2xl text-white text-sm">
         <p className="font-semibold">SQAS &ndash; Smart Attendance System using QR Scanning</p>
-        <p className="text-slate-400 dark:text-slate-300 text-xs mt-1">BS Information Technology &middot; Regular 0 (2022-2026) &middot; Semester 8 &middot; University of Sargodha</p>
+        <p className="text-white/70 text-xs mt-1">BS Information Technology &middot; Regular 0 (2022-2026) &middot; Semester 8 &middot; University of Sargodha</p>
       </div>
     </div>
   );

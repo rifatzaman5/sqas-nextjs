@@ -32,8 +32,8 @@ export default async function TeacherDashboard() {
   const todayFormatted = new Date().toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   const statCards = [
-    { label: 'Weekly Classes',      value: stats.slots,           bg: 'bg-blue-500',    icon: <FaCalendarDays className="text-white text-lg" /> },
-    { label: "Today's Attendances", value: stats.todayAttendance, bg: 'bg-emerald-500', icon: <FaCircleCheck className="text-white text-lg" /> },
+    { label: 'Weekly Classes',      value: stats.slots,           bg: 'bg-[#1a869a]', icon: <FaCalendarDays className="text-white text-lg" /> },
+    { label: "Today's Attendances", value: stats.todayAttendance, bg: 'bg-[#448843]', icon: <FaCircleCheck className="text-white text-lg" /> },
   ];
 
   return (
@@ -77,7 +77,7 @@ export default async function TeacherDashboard() {
                 const c = cls as unknown as { id: number; start_time: string; end_time: string; room: string; subjects?: { name: string; code: string } };
                 return (
                   <div key={c.id} className="flex items-center gap-4 px-5 py-3">
-                    <span className="text-sm font-mono text-blue-600 dark:text-blue-400 w-24 flex-shrink-0">{c.start_time}&ndash;{c.end_time}</span>
+                    <span className="text-sm font-mono text-[#007b8f] dark:text-[#00b8c5] w-24 flex-shrink-0">{c.start_time}&ndash;{c.end_time}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{c.subjects?.name}</p>
                       <p className="text-xs text-slate-400 dark:text-slate-500">{c.subjects?.code} &middot; {c.room}</p>
@@ -95,7 +95,7 @@ export default async function TeacherDashboard() {
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5">
         <h2 className="font-semibold text-slate-700 dark:text-slate-200 mb-3 text-sm">Quick Actions</h2>
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/teacher/take-attendance" className="flex items-center gap-3 px-5 py-3 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition-colors">
+          <Link href="/teacher/take-attendance" className="flex items-center gap-3 px-5 py-3 bg-[#1a869a] text-white rounded-xl font-medium text-sm hover:bg-[#007b8f] transition-colors">
             <FaQrcode className="text-lg" /> Generate QR Code
           </Link>
           <Link href="/teacher/view-attendance" className="flex items-center gap-3 px-5 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-medium text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">

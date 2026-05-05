@@ -44,7 +44,7 @@ export default function SubjectsPage() {
     <div className="p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-5">
         <div><h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Subjects</h1><p className="text-slate-500 dark:text-slate-400 text-sm">{subjects.length} total</p></div>
-        <button onClick={openAdd} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 text-sm font-medium"><FaPlus className="text-xs" />Add Subject</button>
+        <button onClick={openAdd} className="flex items-center gap-2 bg-[#007b8f] text-white px-4 py-2.5 rounded-xl hover:bg-[#007990] text-sm font-medium"><FaPlus className="text-xs" />Add Subject</button>
       </div>
 
       {/* Mobile cards */}
@@ -53,12 +53,12 @@ export default function SubjectsPage() {
           <div key={s.id} className="p-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-mono font-semibold text-indigo-600 dark:text-indigo-400 text-sm">{s.code}</p>
+                <p className="font-mono font-semibold text-[#007b8f] dark:text-[#00b8c5] text-sm">{s.code}</p>
                 <p className="font-semibold text-slate-800 dark:text-slate-100">{s.name}</p>
                 <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{s.branch} · Sem {s.semester} · {s.teachers?.name || '—'}</p>
               </div>
               <div className="flex gap-1">
-                <button onClick={() => openEdit(s)} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
+                <button onClick={() => openEdit(s)} className="p-2 text-[#007b8f] hover:bg-[#f0f9fa] dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
                 <button onClick={() => handleDelete(s.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
               </div>
             </div>
@@ -75,13 +75,13 @@ export default function SubjectsPage() {
           <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
             {subjects.map(s => (
               <tr key={s.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                <td className="px-4 py-3 font-mono font-medium text-indigo-600 dark:text-indigo-400">{s.code}</td>
+                <td className="px-4 py-3 font-mono font-medium text-[#007b8f] dark:text-[#00b8c5]">{s.code}</td>
                 <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{s.name}</td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{s.branch}</td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{s.semester}</td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{s.teachers?.name || '—'}</td>
                 <td className="px-4 py-3"><div className="flex gap-2">
-                  <button onClick={() => openEdit(s)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
+                  <button onClick={() => openEdit(s)} className="p-1.5 text-[#007b8f] hover:bg-[#f0f9fa] dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
                   <button onClick={() => handleDelete(s.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
                 </div></td>
               </tr>
@@ -113,7 +113,7 @@ export default function SubjectsPage() {
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setModal(false)} className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">Cancel</button>
-                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg text-sm hover:bg-orange-700 disabled:opacity-50">{loading ? 'Saving…' : editing ? 'Update' : 'Add'}</button>
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-[#94ad3b] text-white rounded-lg text-sm hover:bg-orange-700 disabled:opacity-50">{loading ? 'Saving…' : editing ? 'Update' : 'Add'}</button>
               </div>
             </form>
           </div>

@@ -44,10 +44,10 @@ export default async function StudentDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         {[
-          { icon: <FaCircleCheck className="text-white text-lg" />, value: totalAtt || 0, label: 'Total Present', bg: 'bg-emerald-500' },
-          { icon: <FaCalendarDays className="text-white text-lg" />, value: todayAtt || 0, label: "Today's Classes", bg: 'bg-blue-500' },
-          { icon: <FaLayerGroup className="text-white text-lg" />, value: student?.semester || '\u2014', label: 'Semester', bg: 'bg-violet-500' },
-          { icon: <FaGraduationCap className="text-white text-lg" />, value: student?.batch || '\u2014', label: 'Batch', bg: 'bg-orange-500' },
+          { icon: <FaCircleCheck className="text-white text-lg" />, value: totalAtt || 0, label: 'Total Present', bg: 'bg-[#448843]' },
+          { icon: <FaCalendarDays className="text-white text-lg" />, value: todayAtt || 0, label: "Today's Classes", bg: 'bg-[#1a869a]' },
+          { icon: <FaLayerGroup className="text-white text-lg" />, value: student?.semester || '\u2014', label: 'Semester', bg: 'bg-[#007b8f]' },
+          { icon: <FaGraduationCap className="text-white text-lg" />, value: student?.batch || '\u2014', label: 'Batch', bg: 'bg-[#a8c243]' },
         ].map(item => (
           <div key={item.label} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
             <div className={`inline-flex items-center justify-center w-10 h-10 ${item.bg} rounded-xl mb-3`}>{item.icon}</div>
@@ -61,7 +61,7 @@ export default async function StudentDashboard() {
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 mb-5">
         <h2 className="font-semibold text-slate-700 dark:text-slate-200 mb-3 text-sm">Quick Actions</h2>
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/student/mark-attendance" className={`flex items-center gap-3 px-5 py-3 rounded-xl font-medium text-sm transition-colors ${isWeekend ? 'bg-slate-300 dark:bg-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}>
+          <Link href="/student/mark-attendance" className={`flex items-center gap-3 px-5 py-3 rounded-xl font-medium text-sm transition-colors ${isWeekend ? 'bg-slate-300 dark:bg-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed' : 'bg-[#448843] text-white hover:bg-[#3a7438]'}`}>
             <FaCamera className="text-lg" /> {isWeekend ? 'No Classes Today' : 'Scan QR to Attend'}
           </Link>
           <Link href="/student/view-attendance" className="flex items-center gap-3 px-5 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-medium text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
@@ -85,7 +85,7 @@ export default async function StudentDashboard() {
                 const c = cls as unknown as { id: number; start_time: string; end_time: string; room: string; subjects?: { name: string; code: string } };
                 return (
                   <div key={c.id} className="flex items-center gap-4 px-5 py-3">
-                    <span className="text-sm font-mono text-blue-600 dark:text-blue-400 w-24 flex-shrink-0">{c.start_time}&ndash;{c.end_time}</span>
+                    <span className="text-sm font-mono text-[#007b8f] dark:text-[#00b8c5] w-24 flex-shrink-0">{c.start_time}&ndash;{c.end_time}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{c.subjects?.name}</p>
                       <p className="text-xs text-slate-400 dark:text-slate-500">{c.subjects?.code} &middot; {c.room}</p>
@@ -109,7 +109,7 @@ export default async function StudentDashboard() {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
           <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <h2 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Recent Attendance</h2>
-            <Link href="/student/view-attendance" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">View all</Link>
+            <Link href="/student/view-attendance" className="text-xs text-[#007b8f] dark:text-[#00b8c5] hover:underline">View all</Link>
           </div>
           <div className="divide-y divide-slate-50 dark:divide-slate-700/50">
             {recentRecs?.length ? recentRecs.map((r) => {
@@ -121,7 +121,7 @@ export default async function StudentDashboard() {
                     <p className="text-xs text-slate-400 dark:text-slate-500">{rec.timetable?.day} &middot; {rec.timetable?.start_time}</p>
                   </div>
                   <div className="text-right flex-shrink-0 ml-3">
-                    <span className="inline-block bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full text-xs">Present</span>
+                    <span className="inline-block bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs">Present</span>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{rec.date}</p>
                   </div>
                 </div>

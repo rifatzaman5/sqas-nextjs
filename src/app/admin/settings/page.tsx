@@ -62,7 +62,7 @@ export default function SettingsPage() {
                 type="text"
                 value={form.university_name}
                 onChange={e => setForm({ ...form, university_name: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700"
               />
             </div>
             <div>
@@ -71,7 +71,7 @@ export default function SettingsPage() {
                 type="text"
                 value={form.address}
                 onChange={e => setForm({ ...form, address: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function SettingsPage() {
                 step="0.0000001"
                 value={form.lat}
                 onChange={e => setForm({ ...form, lat: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700"
               />
             </div>
             <div>
@@ -101,13 +101,13 @@ export default function SettingsPage() {
                 step="0.0000001"
                 value={form.lon}
                 onChange={e => setForm({ ...form, lon: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 dark:bg-slate-700"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 dark:bg-slate-700"
               />
             </div>
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Coverage Radius (km) — current: <span className="text-blue-600 font-semibold">{form.coverage} km</span>
+              Coverage Radius (km) — current: <span className="text-[#007b8f] font-semibold">{form.coverage} km</span>
             </label>
             <input
               type="range"
@@ -123,7 +123,7 @@ export default function SettingsPage() {
               <span>5 km (relaxed)</span>
             </div>
           </div>
-          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-xs text-blue-700 dark:text-blue-300">
+          <div className="mt-3 p-3 bg-[#f0f9fa] dark:bg-[#1a869a]/20 rounded-lg text-xs text-[#007b8f] dark:text-blue-300">
             <strong>Tip:</strong> Use Google Maps to find exact coordinates. Right-click on campus → click the coordinates to copy.
             <br />UoS Main Campus: <span className="font-mono">32.0740, 72.6861</span>
           </div>
@@ -132,12 +132,12 @@ export default function SettingsPage() {
         {/* Attendance Window */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
           <h2 className="font-semibold text-slate-700 dark:text-slate-200 mb-1 flex items-center gap-2">
-            <FaClock className="text-orange-500" /> Attendance Window
+            <FaClock className="text-[#94ad3b]" /> Attendance Window
           </h2>
           <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">How long the QR code remains valid after generation</p>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-              QR Valid Duration (minutes) — current: <span className="text-orange-600 font-semibold">{form.attendance_window} min</span>
+              QR Valid Duration (minutes) — current: <span className="text-[#3a7438] font-semibold">{form.attendance_window} min</span>
             </label>
             <input
               type="range"
@@ -158,7 +158,7 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 disabled:opacity-50 font-medium"
+          className="flex items-center gap-2 bg-[#007b8f] text-white px-6 py-3 rounded-xl hover:bg-[#007990] disabled:opacity-50 font-medium"
         >
           <FaFloppyDisk />
           {loading ? 'Saving…' : 'Save Settings'}
