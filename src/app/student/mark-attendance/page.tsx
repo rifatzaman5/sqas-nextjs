@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaCamera, FaKeyboard, FaCircleCheck, FaCircleXmark, FaCalendarXmark } from 'react-icons/fa6';
+import { getOrCreateDeviceId } from '@/lib/deviceId';
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -16,8 +17,14 @@ export default function MarkAttendancePage() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [deviceId, setDeviceId] = useState<string>('');
   const [tab, setTab] = useState<'camera' | 'manual'>('camera');
   const processedRef = useRef(false);
+
+  // Resolve a stable device id for device-binding
+  useEffect(() => {
+    setDeviceId(getOrCreateDeviceId());
+  }, []);
 
   // Get location on mount
   useEffect(() => {
@@ -78,7 +85,7 @@ export default function MarkAttendancePage() {
       const r = await fetch('/api/qr/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, lat: location?.lat, lon: location?.lon }),
+        body: JSON.stringify({ token, lat: location?.lat, lon: location?.lon, deviceId }),
       });
       const data = await r.json();
       if (r.ok) {
@@ -142,6 +149,11 @@ export default function MarkAttendancePage() {
         <p className="text-slate-500 dark:text-slate-400 text-sm">Scan the QR code shown by your teacher</p>
         {!location && <p className="text-xs text-orange-500 mt-1">⚠️ Location not available — attendance may be rejected by proximity check</p>}
         {location && <p className="text-xs text-green-600 mt-1">✓ Location detected</p>}
+        {deviceId ? (
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">📱 Device ID: <span className="font-mono">{deviceId.slice(0, 8)}…</span></p>
+        ) : (
+          <p className="text-xs text-red-500 mt-1">⚠️ Device fingerprint unavailable — enable browser storage</p>
+        )}
       </div>
 
       {/* Tabs */}

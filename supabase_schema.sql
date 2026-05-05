@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS students (
   email TEXT,
   phone TEXT,
   password TEXT NOT NULL,
+  device_id TEXT,
+  device_registered_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -81,14 +83,26 @@ CREATE TABLE IF NOT EXISTS attendance (
   UNIQUE(student_id, timetable_id, date)
 );
 
--- QR Tokens table
+-- QR Tokens table (one-time use: marked used_at when consumed)
 CREATE TABLE IF NOT EXISTS qr_tokens (
   id SERIAL PRIMARY KEY,
   token TEXT UNIQUE NOT NULL,
   timetable_id INTEGER REFERENCES timetable(id) ON DELETE CASCADE,
   teacher_id INTEGER REFERENCES teachers(id) ON DELETE CASCADE,
   expires_at TIMESTAMPTZ NOT NULL,
+  used_at TIMESTAMPTZ,
+  used_by_student_id INTEGER REFERENCES students(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- QR Token Scans (per-student-per-token ledger; blocks same student from replaying same QR)
+CREATE TABLE IF NOT EXISTS qr_token_scans (
+  id SERIAL PRIMARY KEY,
+  qr_token_id INTEGER REFERENCES qr_tokens(id) ON DELETE CASCADE,
+  student_id INTEGER REFERENCES students(id) ON DELETE CASCADE,
+  device_id TEXT,
+  scanned_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(qr_token_id, student_id)
 );
 
 -- Settings table
@@ -99,7 +113,7 @@ CREATE TABLE IF NOT EXISTS settings (
   lat DECIMAL(10,7) DEFAULT 32.5785,
   lon DECIMAL(10,7) DEFAULT 74.0828,
   coverage DECIMAL(5,2) DEFAULT 0.5,
-  attendance_window INTEGER DEFAULT 15
+  attendance_window INTEGER DEFAULT 5
 );
 
 -- =============================================
@@ -178,6 +192,7 @@ ALTER TABLE subjects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE timetable ENABLE ROW LEVEL SECURITY;
 ALTER TABLE attendance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE qr_tokens ENABLE ROW LEVEL SECURITY;
+ALTER TABLE qr_token_scans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
 -- Allow service role full access (used by API routes)
@@ -188,6 +203,7 @@ DROP POLICY IF EXISTS "service_role_all" ON subjects;
 DROP POLICY IF EXISTS "service_role_all" ON timetable;
 DROP POLICY IF EXISTS "service_role_all" ON attendance;
 DROP POLICY IF EXISTS "service_role_all" ON qr_tokens;
+DROP POLICY IF EXISTS "service_role_all" ON qr_token_scans;
 DROP POLICY IF EXISTS "service_role_all" ON settings;
 
 CREATE POLICY "service_role_all" ON admins FOR ALL USING (true);
@@ -197,6 +213,7 @@ CREATE POLICY "service_role_all" ON subjects FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON timetable FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON attendance FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON qr_tokens FOR ALL USING (true);
+CREATE POLICY "service_role_all" ON qr_token_scans FOR ALL USING (true);
 CREATE POLICY "service_role_all" ON settings FOR ALL USING (true);
 
 -- Fix passwords: ensure all accounts use hash for "123"

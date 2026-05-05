@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaPlus, FaPen, FaTrash, FaXmark, FaMagnifyingGlass } from 'react-icons/fa6';
+import { FaPlus, FaPen, FaTrash, FaXmark, FaMagnifyingGlass, FaMobileScreen } from 'react-icons/fa6';
 
-interface Student { id: number; enrollment_no: string; name: string; batch: string; semester: number; branch: string; email: string; phone: string; }
+interface Student { id: number; enrollment_no: string; name: string; batch: string; semester: number; branch: string; email: string; phone: string; device_id?: string | null; }
 
 const empty = { enrollment_no: '', name: '', batch: 'BSIT-R0-2022', semester: 8, branch: 'Information Technology', email: '', phone: '', password: '' };
 
@@ -42,6 +42,12 @@ export default function StudentsPage() {
     if (res.ok) { toast.success('Deleted'); fetchStudents(); } else toast.error('Error deleting');
   };
 
+  const handleResetDevice = async (s: Student) => {
+    if (!confirm(`Unbind ${s.name}'s registered device? They will be able to register a new phone on their next attendance.`)) return;
+    const res = await fetch('/api/students/device-reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: s.id }) });
+    if (res.ok) { toast.success('Device binding reset'); fetchStudents(); } else { const d = await res.json(); toast.error(d.error || 'Error'); }
+  };
+
   const filtered = students.filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.enrollment_no.includes(search));
 
   return (
@@ -74,8 +80,9 @@ export default function StudentsPage() {
                   <p className="text-xs font-mono text-indigo-600 dark:text-indigo-400">{s.enrollment_no}</p>
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => openEdit(s)} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
-                  <button onClick={() => handleDelete(s.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
+                  <button onClick={() => openEdit(s)} title="Edit" className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
+                  <button onClick={() => handleResetDevice(s)} disabled={!s.device_id} title={s.device_id ? 'Reset device binding' : 'No device registered'} className="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"><FaMobileScreen className="text-xs" /></button>
+                  <button onClick={() => handleDelete(s.id)} title="Delete" className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
                 </div>
               </div>
               <div className="flex gap-2 flex-wrap mt-1.5">
@@ -94,7 +101,7 @@ export default function StudentsPage() {
           <table className="w-full text-sm">
             <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 uppercase text-xs">
               <tr>
-                {['Enrollment', 'Name', 'Batch', 'Semester', 'Branch', 'Email', 'Actions'].map(h => (
+                {['Enrollment', 'Name', 'Batch', 'Semester', 'Branch', 'Email', 'Device', 'Actions'].map(h => (
                   <th key={h} className="px-4 py-3 text-left font-medium">{h}</th>
                 ))}
               </tr>
@@ -109,14 +116,22 @@ export default function StudentsPage() {
                   <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{s.branch}</td>
                   <td className="px-4 py-3 text-slate-400 dark:text-slate-500">{s.email || '—'}</td>
                   <td className="px-4 py-3">
+                    {s.device_id ? (
+                      <span className="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full text-xs font-mono" title={s.device_id}>{s.device_id.slice(0, 8)}…</span>
+                    ) : (
+                      <span className="text-slate-400 dark:text-slate-500 text-xs">unbound</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
                     <div className="flex gap-2">
-                      <button onClick={() => openEdit(s)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
-                      <button onClick={() => handleDelete(s.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
+                      <button onClick={() => openEdit(s)} title="Edit" className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg"><FaPen className="text-xs" /></button>
+                      <button onClick={() => handleResetDevice(s)} disabled={!s.device_id} title={s.device_id ? 'Reset device binding' : 'No device registered'} className="p-1.5 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"><FaMobileScreen className="text-xs" /></button>
+                      <button onClick={() => handleDelete(s.id)} title="Delete" className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
                     </div>
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-slate-400 dark:text-slate-500">No students found</td></tr>}
+              {filtered.length === 0 && <tr><td colSpan={8} className="text-center py-8 text-slate-400 dark:text-slate-500">No students found</td></tr>}
             </tbody>
           </table>
         </div>
