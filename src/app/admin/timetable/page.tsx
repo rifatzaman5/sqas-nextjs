@@ -48,13 +48,13 @@ export default function TimetablePage() {
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div><h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Timetable</h1><p className="text-slate-500 dark:text-slate-400 text-sm">Academic Year 2025-26</p></div>
-        <div className="flex gap-3">
-          <select value={filterBatch} onChange={e => setFilterBatch(e.target.value)} className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          <select value={filterBatch} onChange={e => setFilterBatch(e.target.value)} className="flex-1 sm:flex-none min-w-[140px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a869a] text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800">
             {['BSIT-R0-2022', 'BSIT-R0-2021', 'BSIT-R0-2023', 'BSIT-R0-2020'].map(b => <option key={b}>{b}</option>)}
           </select>
-          <button onClick={() => { setForm({ ...empty, subject_id: subjects[0]?.id?.toString() || '', teacher_id: teachers[0]?.id?.toString() || '' }); setModal(true); }} className="flex items-center gap-2 bg-[#007b8f] text-white px-4 py-2.5 rounded-xl hover:bg-[#007990] text-sm font-medium"><FaPlus className="text-xs" />Add Slot</button>
+          <button onClick={() => { setForm({ ...empty, subject_id: subjects[0]?.id?.toString() || '', teacher_id: teachers[0]?.id?.toString() || '' }); setModal(true); }} className="flex items-center gap-2 bg-[#007b8f] text-white px-4 py-2.5 rounded-xl hover:bg-[#007990] text-sm font-medium whitespace-nowrap"><FaPlus className="text-xs" />Add Slot</button>
         </div>
       </div>
 
@@ -67,15 +67,15 @@ export default function TimetablePage() {
             </div>
             <div className="divide-y divide-slate-50 dark:divide-slate-700">
               {(grouped[day] || []).map(slot => (
-                <div key={slot.id} className="px-5 py-3 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm font-mono text-[#007b8f] w-24">{slot.start_time} – {slot.end_time}</span>
-                    <div>
-                      <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{slot.subjects?.name} <span className="text-slate-400 dark:text-slate-500 font-normal text-xs">({slot.subjects?.code})</span></p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{slot.teachers?.name} • {slot.room}</p>
+                <div key={slot.id} className="px-4 sm:px-5 py-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                    <span className="text-xs sm:text-sm font-mono text-[#007b8f] w-20 sm:w-24 flex-shrink-0">{slot.start_time}–{slot.end_time}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{slot.subjects?.name} <span className="text-slate-400 dark:text-slate-500 font-normal text-xs">({slot.subjects?.code})</span></p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{slot.teachers?.name} • {slot.room}</p>
                     </div>
                   </div>
-                  <button onClick={() => handleDelete(slot.id)} className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><FaTrash className="text-xs" /></button>
+                  <button onClick={() => handleDelete(slot.id)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg flex-shrink-0"><FaTrash className="text-xs" /></button>
                 </div>
               ))}
               {!grouped[day]?.length && <p className="px-5 py-3 text-sm text-slate-400 dark:text-slate-500">No classes</p>}

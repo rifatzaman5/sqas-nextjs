@@ -111,7 +111,7 @@ export default function AdminAttendancePage() {
       )}
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-5">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 mb-5">
         <input
           type="date"
           value={filter.date}
@@ -146,37 +146,59 @@ export default function AdminAttendancePage() {
         {loading ? (
           <div className="text-center py-12 text-slate-400 dark:text-slate-500">Loading…</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 uppercase text-xs">
-                <tr>
-                  {['Date', 'Student', 'Enrollment', 'Subject', 'Teacher', 'Time', 'Status'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left font-medium whitespace-nowrap">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                {filtered.map(r => (
-                  <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.date}</td>
-                    <td className="px-4 py-3 text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.students?.name}</td>
-                    <td className="px-4 py-3 font-mono text-[#007b8f] dark:text-[#00b8c5] text-xs whitespace-nowrap">{r.students?.enrollment_no}</td>
-                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                      {r.subjects?.name} <span className="text-slate-400 dark:text-slate-500 text-xs">({r.subjects?.code})</span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs whitespace-nowrap">{r.teachers?.name}</td>
-                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">{r.timetable?.start_time}</td>
-                    <td className="px-4 py-3">
-                      <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium capitalize">{r.status}</span>
-                    </td>
+          <>
+            {/* Mobile card view */}
+            <div className="sm:hidden divide-y divide-slate-100 dark:divide-slate-700">
+              {filtered.map(r => (
+                <div key={r.id} className="p-4">
+                  <div className="flex items-start justify-between mb-1.5 gap-2">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 truncate">{r.students?.name}</p>
+                      <p className="text-xs font-mono text-[#007b8f] dark:text-[#00b8c5] truncate">{r.students?.enrollment_no}</p>
+                    </div>
+                    <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium capitalize flex-shrink-0">{r.status}</span>
+                  </div>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 truncate">{r.subjects?.name} <span className="text-slate-400 dark:text-slate-500 text-xs">({r.subjects?.code})</span></p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{r.teachers?.name}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{r.date} · {r.timetable?.start_time}</p>
+                </div>
+              ))}
+              {!filtered.length && <p className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm">No attendance records found</p>}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 uppercase text-xs">
+                  <tr>
+                    {['Date', 'Student', 'Enrollment', 'Subject', 'Teacher', 'Time', 'Status'].map(h => (
+                      <th key={h} className="px-4 py-3 text-left font-medium whitespace-nowrap">{h}</th>
+                    ))}
                   </tr>
-                ))}
-                {!filtered.length && (
-                  <tr><td colSpan={7} className="text-center py-10 text-slate-400 dark:text-slate-500">No attendance records found</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                  {filtered.map(r => (
+                    <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                      <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.date}</td>
+                      <td className="px-4 py-3 text-slate-800 dark:text-slate-200 whitespace-nowrap">{r.students?.name}</td>
+                      <td className="px-4 py-3 font-mono text-[#007b8f] dark:text-[#00b8c5] text-xs whitespace-nowrap">{r.students?.enrollment_no}</td>
+                      <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                        {r.subjects?.name} <span className="text-slate-400 dark:text-slate-500 text-xs">({r.subjects?.code})</span>
+                      </td>
+                      <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs whitespace-nowrap">{r.teachers?.name}</td>
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">{r.timetable?.start_time}</td>
+                      <td className="px-4 py-3">
+                        <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium capitalize">{r.status}</span>
+                      </td>
+                    </tr>
+                  ))}
+                  {!filtered.length && (
+                    <tr><td colSpan={7} className="text-center py-10 text-slate-400 dark:text-slate-500">No attendance records found</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

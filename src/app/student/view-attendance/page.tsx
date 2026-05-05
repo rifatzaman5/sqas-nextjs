@@ -80,7 +80,7 @@ export default function StudentViewAttendancePage() {
     : 0;
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 md:p-6 lg:p-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">My Attendance</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm">{records.length} total records across {subjectCodes.length} subjects</p>
@@ -92,15 +92,15 @@ export default function StudentViewAttendancePage() {
         <>
           {/* Overall attendance badge */}
           {subjectCodes.length > 0 && (
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 mb-6 flex items-center gap-6">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold border-4 ${overallPercent >= 75 ? 'border-green-400 text-[#3a7438] bg-green-50 dark:bg-green-900/30 dark:text-[#a8c243] dark:border-green-600' : overallPercent >= 60 ? 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-600' : 'border-red-400 text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-600'}`}>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4 sm:p-5 mb-6 flex items-center gap-4 sm:gap-6">
+              <div className={`w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold border-4 ${overallPercent >= 75 ? 'border-green-400 text-[#3a7438] bg-green-50 dark:bg-green-900/30 dark:text-[#a8c243] dark:border-green-600' : overallPercent >= 60 ? 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-600' : 'border-red-400 text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-600'}`}>
                 {overallPercent}%
               </div>
-              <div>
-                <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">Overall Attendance</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Average across all subjects</p>
-                <p className={`text-sm font-medium mt-1 ${overallPercent >= 75 ? 'text-[#3a7438] dark:text-[#a8c243]' : overallPercent >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {overallPercent >= 75 ? '✓ Good standing' : overallPercent >= 60 ? '⚠ Needs improvement' : '✗ Below minimum — attendance required'}
+              <div className="min-w-0">
+                <p className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100">Overall Attendance</p>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Average across all subjects</p>
+                <p className={`text-xs sm:text-sm font-medium mt-1 ${overallPercent >= 75 ? 'text-[#3a7438] dark:text-[#a8c243]' : overallPercent >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
+                  {overallPercent >= 75 ? '✓ Good standing' : overallPercent >= 60 ? '⚠ Needs improvement' : '✗ Below minimum'}
                 </p>
               </div>
             </div>
@@ -142,35 +142,55 @@ export default function StudentViewAttendancePage() {
             </div>
           )}
 
-          {/* Full records table */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 uppercase text-xs">
-                <tr>
-                  {['Date', 'Subject', 'Code', 'Day & Time', 'Status'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left font-medium">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                {filteredRecords.map(r => (
-                  <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{r.date}</td>
-                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{r.subjects?.name}</td>
-                    <td className="px-4 py-3 font-mono text-slate-500 dark:text-slate-400 text-xs">{r.subjects?.code}</td>
-                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">
-                      {r.timetable?.day} {r.timetable?.start_time}–{r.timetable?.end_time}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium">Present</span>
-                    </td>
+          {/* Full records — table on sm+, cards on mobile */}
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+            {/* Mobile cards */}
+            <div className="sm:hidden divide-y divide-slate-100 dark:divide-slate-700">
+              {filteredRecords.map(r => (
+                <div key={r.id} className="p-4">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 truncate">{r.subjects?.name}</p>
+                      <p className="text-xs font-mono text-[#007b8f] dark:text-[#00b8c5]">{r.subjects?.code}</p>
+                    </div>
+                    <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0">Present</span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{r.date} · {r.timetable?.day} {r.timetable?.start_time}–{r.timetable?.end_time}</p>
+                </div>
+              ))}
+              {!filteredRecords.length && <p className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">No attendance records yet</p>}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 uppercase text-xs">
+                  <tr>
+                    {['Date', 'Subject', 'Code', 'Day & Time', 'Status'].map(h => (
+                      <th key={h} className="px-4 py-3 text-left font-medium">{h}</th>
+                    ))}
                   </tr>
-                ))}
-                {!filteredRecords.length && (
-                  <tr><td colSpan={5} className="text-center py-8 text-slate-400 dark:text-slate-500">No attendance records yet</td></tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                  {filteredRecords.map(r => (
+                    <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                      <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{r.date}</td>
+                      <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{r.subjects?.name}</td>
+                      <td className="px-4 py-3 font-mono text-slate-500 dark:text-slate-400 text-xs">{r.subjects?.code}</td>
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">
+                        {r.timetable?.day} {r.timetable?.start_time}–{r.timetable?.end_time}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="bg-[#eef5e3] dark:bg-[#448843]/30 text-[#3a7438] dark:text-[#a8c243] px-2 py-0.5 rounded-full text-xs font-medium">Present</span>
+                      </td>
+                    </tr>
+                  ))}
+                  {!filteredRecords.length && (
+                    <tr><td colSpan={5} className="text-center py-8 text-slate-400 dark:text-slate-500">No attendance records yet</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* 75% rule note */}

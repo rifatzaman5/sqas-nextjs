@@ -110,8 +110,8 @@ export default function MarkAttendancePage() {
 
   if (result) {
     return (
-      <div className="p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-8 max-w-sm w-full text-center">
+      <div className="p-4 md:p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8 max-w-sm w-full text-center">
           {result.success ? (
             <FaCircleCheck className="text-[#448843] text-6xl mx-auto mb-4" />
           ) : (
@@ -131,8 +131,8 @@ export default function MarkAttendancePage() {
 
   if (isWeekend) {
     return (
-      <div className="p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-8 max-w-sm w-full text-center">
+      <div className="p-4 md:p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 md:p-8 max-w-sm w-full text-center">
           <FaCalendarXmark className="text-amber-500 text-6xl mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">No Classes Today</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">It&apos;s {today} &mdash; university is off.</p>

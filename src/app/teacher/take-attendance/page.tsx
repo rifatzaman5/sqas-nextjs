@@ -33,12 +33,39 @@ function getCurrentTime() {
   return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 }
 
+// Grace window – must match the QR generate API (route.ts)
+const EARLY_GRACE_MIN = 10;
+const LATE_GRACE_MIN = 15;
+
+function toMinutes(hhmm: string) {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function nowMinutes() {
+  const n = new Date();
+  return n.getHours() * 60 + n.getMinutes();
+}
+
 function getSlotStatus(slot: TimetableSlot, today: string): 'past' | 'active' | 'upcoming' | 'other-day' {
   if (slot.day !== today) return 'other-day';
   const now = getCurrentTime();
   if (now < slot.start_time) return 'upcoming';
   if (now >= slot.start_time && now <= slot.end_time) return 'active';
   return 'past';
+}
+
+// True only when QR generation is allowed (within class time + grace).
+function canGenerateQR(slot: TimetableSlot | null, today: string) {
+  if (!slot || slot.day !== today) return false;
+  const n = nowMinutes();
+  return n >= toMinutes(slot.start_time) - EARLY_GRACE_MIN
+      && n <= toMinutes(slot.end_time) + LATE_GRACE_MIN;
+}
+
+function fmtMins(mins: number) {
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 }
 
 export default function TakeAttendancePage() {
@@ -284,25 +311,48 @@ export default function TakeAttendancePage() {
                     <p className="text-slate-500 dark:text-slate-400 text-sm">QR generation is disabled on weekends</p>
                     <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Come back on Monday to take attendance</p>
                   </div>
-                ) : selected ? (
-                  <>
-                    <div className="text-center">
-                      <p className="text-slate-700 dark:text-slate-200 font-medium">{selected.subjects?.name}</p>
-                      <p className="text-slate-400 dark:text-slate-500 text-sm">{selected.day} &middot; {selected.start_time}&ndash;{selected.end_time} &middot; {selected.room}</p>
-                      {selected.day !== today && (
-                        <p className="text-red-600 dark:text-red-400 text-xs mt-1 font-medium">Cannot generate QR &mdash; this class is on {selected.day}, not today ({today})</p>
-                      )}
-                    </div>
-                    <button
-                      onClick={generateQR}
-                      disabled={generating || selected.day !== today}
-                      className="flex items-center gap-2 bg-[#1a869a] text-white px-6 py-3 rounded-xl hover:bg-[#007b8f] disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                    >
-                      <FaQrcode />
-                      {generating ? 'Generating\u2026' : selected.day !== today ? 'Not Available Today' : 'Generate QR Code'}
-                    </button>
-                  </>
-                ) : (
+                ) : selected ? (() => {
+                  const allowed = canGenerateQR(selected, today);
+                  const slotStatus = getSlotStatus(selected, today);
+                  const startMins = toMinutes(selected.start_time);
+                  const endMins = toMinutes(selected.end_time);
+                  const earliest = fmtMins(startMins - EARLY_GRACE_MIN);
+                  const latest = fmtMins(endMins + LATE_GRACE_MIN);
+                  let blockMsg = '';
+                  let btnLabel = 'Generate QR Code';
+                  if (selected.day !== today) {
+                    blockMsg = `Cannot generate QR \u2014 this class is on ${selected.day}, not today (${today})`;
+                    btnLabel = 'Not Available Today';
+                  } else if (slotStatus === 'upcoming' && !allowed) {
+                    blockMsg = `Too early \u2014 class starts at ${selected.start_time}. QR opens at ${earliest}.`;
+                    btnLabel = `Opens at ${earliest}`;
+                  } else if (slotStatus === 'past' && !allowed) {
+                    blockMsg = `Class ended at ${selected.end_time}. QR generation closed at ${latest}.`;
+                    btnLabel = 'Class Window Closed';
+                  }
+                  return (
+                    <>
+                      <div className="text-center">
+                        <p className="text-slate-700 dark:text-slate-200 font-medium">{selected.subjects?.name}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-sm">{selected.day} &middot; {selected.start_time}&ndash;{selected.end_time} &middot; {selected.room}</p>
+                        {blockMsg && (
+                          <p className="text-red-600 dark:text-red-400 text-xs mt-1 font-medium">{blockMsg}</p>
+                        )}
+                        {allowed && (
+                          <p className="text-[#3a7438] dark:text-[#a8c243] text-xs mt-1 font-medium">QR window open until {latest}</p>
+                        )}
+                      </div>
+                      <button
+                        onClick={generateQR}
+                        disabled={generating || !allowed}
+                        className="flex items-center gap-2 bg-[#1a869a] text-white px-6 py-3 rounded-xl hover:bg-[#007b8f] disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                      >
+                        <FaQrcode />
+                        {generating ? 'Generating\u2026' : allowed ? 'Generate QR Code' : btnLabel}
+                      </button>
+                    </>
+                  );
+                })() : (
                   <p className="text-slate-500 dark:text-slate-400 text-sm text-center">Select a class first</p>
                 )}
               </div>

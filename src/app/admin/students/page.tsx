@@ -52,13 +52,13 @@ export default function StudentsPage() {
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      <div className="flex items-center justify-between mb-5">
-        <div>
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Students</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm">{students.length} total students</p>
         </div>
-        <button onClick={openAdd} className="flex items-center gap-2 bg-[#007b8f] text-white px-4 py-2.5 rounded-xl hover:bg-[#007990] text-sm font-medium">
-          <FaPlus className="text-xs" /> Add Student
+        <button onClick={openAdd} className="flex items-center gap-2 bg-[#007b8f] text-white px-3 sm:px-4 py-2.5 rounded-xl hover:bg-[#007990] text-sm font-medium whitespace-nowrap flex-shrink-0">
+          <FaPlus className="text-xs" /> <span className="hidden xs:inline sm:inline">Add Student</span><span className="xs:hidden sm:hidden">Add</span>
         </button>
       </div>
 
