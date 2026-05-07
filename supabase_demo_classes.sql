@@ -5,6 +5,13 @@
 -- Run this in Supabase SQL Editor
 -- =============================================
 
+-- 0) Reset auto-increment sequences (seed data inserted with explicit IDs
+--    leaves sequences out of sync — this realigns them with current MAX id)
+SELECT setval('subjects_id_seq',  COALESCE((SELECT MAX(id) FROM subjects),  1), true);
+SELECT setval('timetable_id_seq', COALESCE((SELECT MAX(id) FROM timetable), 1), true);
+SELECT setval('teachers_id_seq',  COALESCE((SELECT MAX(id) FROM teachers),  1), true);
+SELECT setval('students_id_seq',  COALESCE((SELECT MAX(id) FROM students),  1), true);
+
 -- 1) Add a demo subject for each teacher (so it shows clearly as "Demo")
 --    Skips if a demo subject already exists for that teacher
 INSERT INTO subjects (name, code, branch, semester, teacher_id)
