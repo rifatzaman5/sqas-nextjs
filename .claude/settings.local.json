@@ -15,7 +15,8 @@
       "Bash(npx tsc *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(start c:/Users/HP/Desktop/sqas-nextjs/exhibition-banner.html)"
     ]
   }
 }
