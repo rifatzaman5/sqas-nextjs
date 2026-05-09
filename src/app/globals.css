@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f6f9f9;
+  --background: red;
   --foreground: #0f172a;
 
   /* Minimal brand palette — teal + forest */
