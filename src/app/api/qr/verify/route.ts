@@ -49,11 +49,13 @@ export async function POST(req: NextRequest) {
 
   // Best-effort scan logging (does NOT block attendance if it fails)
   if (deviceId && typeof deviceId === 'string' && deviceId.length >= 8) {
-    await supabaseAdmin
-      .from('qr_token_scans')
-      .insert({ qr_token_id: qrData.id, student_id: session.id, device_id: deviceId })
-      .then(() => {})
-      .catch(() => {});
+    try {
+      await supabaseAdmin
+        .from('qr_token_scans')
+        .insert({ qr_token_id: qrData.id, student_id: session.id, device_id: deviceId });
+    } catch {
+      // swallow — audit log failure must not block attendance
+    }
   }
 
   // Resolve subject_id from joined timetable

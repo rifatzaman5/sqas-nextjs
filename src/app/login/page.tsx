@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {
@@ -15,10 +15,17 @@ const ROLES = [
 ] as const;
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[100dvh] flex items-center justify-center text-slate-500">Loading…</div>}>
+      <LoginPageInner />
+    </Suspense>
+  );
+}
+
+function LoginPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next'); // deep-link after login (e.g. /student/mark-attendance?token=XXX)
-  const isQrDeepLink = !!(next && next.includes('token='));
   const [form, setForm] = useState({ role: 'student' as 'admin' | 'teacher' | 'student', username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);

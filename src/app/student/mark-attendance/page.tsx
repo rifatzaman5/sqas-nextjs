@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { FaCamera, FaKeyboard, FaCircleCheck, FaCircleXmark, FaCalendarXmark } from 'react-icons/fa6';
@@ -19,6 +19,14 @@ function extractToken(input: string): string {
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function MarkAttendancePage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading…</div>}>
+      <MarkAttendancePageInner />
+    </Suspense>
+  );
+}
+
+function MarkAttendancePageInner() {
   const today = WEEKDAYS[new Date().getDay()];
   const isWeekend = today === 'Saturday' || today === 'Sunday';
   const searchParams = useSearchParams();
@@ -51,6 +59,29 @@ export default function MarkAttendancePage() {
     }
   }, []);
 
+  const submitAttendance = useCallback(async (token: string) => {
+    setSubmitting(true);
+    try {
+      const r = await fetch('/api/qr/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, lat: location?.lat, lon: location?.lon, deviceId }),
+      });
+      const data = await r.json();
+      if (r.ok) {
+        setResult({ success: true, message: data.message });
+        toast.success(data.message);
+      } else {
+        setResult({ success: false, message: data.error });
+        toast.error(data.error);
+      }
+    } catch {
+      toast.error('Network error. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }, [location, deviceId]);
+
   // Auto-submit if URL contains ?token=XXX (deep-link from QR scan via any scanner)
   useEffect(() => {
     if (!urlToken || autoSubmittedRef.current || result) return;
@@ -60,8 +91,7 @@ export default function MarkAttendancePage() {
       submitAttendance(extractToken(urlToken));
     }, 600);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlToken, result]);
+  }, [urlToken, result, submitAttendance]);
 
   // Start/stop camera scanner
   useEffect(() => {
@@ -105,29 +135,6 @@ export default function MarkAttendancePage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, result]);
-
-  const submitAttendance = async (token: string) => {
-    setSubmitting(true);
-    try {
-      const r = await fetch('/api/qr/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, lat: location?.lat, lon: location?.lon, deviceId }),
-      });
-      const data = await r.json();
-      if (r.ok) {
-        setResult({ success: true, message: data.message });
-        toast.success(data.message);
-      } else {
-        setResult({ success: false, message: data.error });
-        toast.error(data.error);
-      }
-    } catch {
-      toast.error('Network error. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const reset = () => {
     setResult(null);

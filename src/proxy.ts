@@ -2,24 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const user = token ? verifyToken(token) : null;
 
   // Public routes
   if (pathname === '/login' || pathname === '/') {
-    if (user) {
+    if (user && pathname === '/') {
       return NextResponse.redirect(new URL(`/${user.role}`, request.url));
-    }
-    if (pathname === '/') {
-      return NextResponse.redirect(new URL('/login', request.url));
     }
     return NextResponse.next();
   }
 
-  // Protected routes
+  // Protected routes — not logged in
   if (!user) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    // Preserve the original URL (with ?token=XXX query) so login can bounce back.
+    // Covers the case when a QR scanner opens /student/mark-attendance?token=XXX
+    // and the user isn't logged in yet.
+    const next = encodeURIComponent(pathname + search);
+    return NextResponse.redirect(new URL(`/login?next=${next}`, request.url));
   }
 
   // Role-based access
