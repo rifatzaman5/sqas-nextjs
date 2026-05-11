@@ -8,9 +8,6 @@ export async function POST(req: NextRequest) {
 
   const { token, lat, lon, deviceId } = await req.json();
   if (!token) return NextResponse.json({ error: 'QR token required' }, { status: 400 });
-  if (!deviceId || typeof deviceId !== 'string' || deviceId.length < 8) {
-    return NextResponse.json({ error: 'Device fingerprint missing — please reload the page and allow storage' }, { status: 400 });
-  }
 
   // Find token
   const { data: qrData } = await supabaseAdmin
@@ -26,39 +23,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'QR code has expired' }, { status: 400 });
   }
 
-  // One-time-use guard: this student already scanned this token
-  const { data: priorScan } = await supabaseAdmin
-    .from('qr_token_scans')
-    .select('id')
-    .eq('qr_token_id', qrData.id)
-    .eq('student_id', session.id)
-    .maybeSingle();
-
-  if (priorScan) {
-    return NextResponse.json({ error: 'This QR code has already been used by your account' }, { status: 400 });
-  }
-
-  // Device binding: register on first use, enforce on subsequent
-  const { data: student } = await supabaseAdmin
-    .from('students')
-    .select('id, device_id')
-    .eq('id', session.id)
-    .single();
-
-  if (!student) return NextResponse.json({ error: 'Student record not found' }, { status: 404 });
-
-  if (!student.device_id) {
-    const { error: regErr } = await supabaseAdmin
-      .from('students')
-      .update({ device_id: deviceId, device_registered_at: new Date().toISOString() })
-      .eq('id', session.id);
-    if (regErr) return NextResponse.json({ error: 'Failed to register device' }, { status: 500 });
-  } else if (student.device_id !== deviceId) {
-    return NextResponse.json({
-      error: 'This is not your registered device. Please mark attendance from your registered phone, or contact admin to reset device binding.',
-    }, { status: 403 });
-  }
-
   // Check location if provided (within configured coverage)
   if (lat && lon) {
     const { data: settings } = await supabaseAdmin.from('settings').select('lat, lon, coverage').eq('id', 1).single();
@@ -72,7 +36,7 @@ export async function POST(req: NextRequest) {
 
   const today = new Date().toISOString().split('T')[0];
 
-  // Check duplicate attendance (same class, same day)
+  // Check duplicate attendance (same class, same day) — keep this for data integrity
   const { data: existing } = await supabaseAdmin
     .from('attendance')
     .select('id')
@@ -83,15 +47,16 @@ export async function POST(req: NextRequest) {
 
   if (existing) return NextResponse.json({ error: 'Attendance already marked for this class today' }, { status: 400 });
 
-  // Record this scan (locks token for this student)
-  const { error: scanErr } = await supabaseAdmin.from('qr_token_scans').insert({
-    qr_token_id: qrData.id,
-    student_id: session.id,
-    device_id: deviceId,
-  });
-  if (scanErr) return NextResponse.json({ error: 'Failed to record scan' }, { status: 500 });
+  // Best-effort scan logging (does NOT block attendance if it fails)
+  if (deviceId && typeof deviceId === 'string' && deviceId.length >= 8) {
+    await supabaseAdmin
+      .from('qr_token_scans')
+      .insert({ qr_token_id: qrData.id, student_id: session.id, device_id: deviceId })
+      .then(() => {})
+      .catch(() => {});
+  }
 
-  // Resolve subject_id from joined timetable (Supabase returns array or object depending on relation)
+  // Resolve subject_id from joined timetable
   const tt = qrData.timetable as unknown as { subject_id?: number } | { subject_id?: number }[] | null;
   const subjectId = Array.isArray(tt) ? tt[0]?.subject_id : tt?.subject_id;
 
@@ -109,7 +74,7 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Stamp token's first use (audit only — does not block other students within window)
+  // Stamp token's first use (audit only)
   if (!qrData.used_at) {
     await supabaseAdmin
       .from('qr_tokens')

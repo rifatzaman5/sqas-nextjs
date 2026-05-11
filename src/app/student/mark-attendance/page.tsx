@@ -147,13 +147,7 @@ export default function MarkAttendancePage() {
       <div className="mb-5">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Mark Attendance</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm">Scan the QR code shown by your teacher</p>
-        {!location && <p className="text-xs text-[#94ad3b] mt-1">⚠️ Location not available — attendance may be rejected by proximity check</p>}
         {location && <p className="text-xs text-[#3a7438] mt-1">✓ Location detected</p>}
-        {deviceId ? (
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">📱 Device ID: <span className="font-mono">{deviceId.slice(0, 8)}…</span></p>
-        ) : (
-          <p className="text-xs text-red-500 mt-1">⚠️ Device fingerprint unavailable — enable browser storage</p>
-        )}
       </div>
 
       {/* Tabs */}
