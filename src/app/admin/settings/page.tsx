@@ -112,7 +112,7 @@ export default function SettingsPage() {
             <input
               type="range"
               min="0.1"
-              max="5"
+              max="500"
               step="0.1"
               value={form.coverage}
               onChange={e => setForm({ ...form, coverage: parseFloat(e.target.value) })}
@@ -120,12 +120,13 @@ export default function SettingsPage() {
             />
             <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500 mt-1">
               <span>0.1 km (strict)</span>
-              <span>5 km (relaxed)</span>
+              <span>500 km (multi-city demo)</span>
             </div>
           </div>
           <div className="mt-3 p-3 bg-[#f0f9fa] dark:bg-[#1a869a]/20 rounded-lg text-xs text-[#007b8f] dark:text-blue-300">
             <strong>Tip:</strong> Use Google Maps to find exact coordinates. Right-click on campus → click the coordinates to copy.
             <br />UoS Main Campus: <span className="font-mono">32.0740, 72.6861</span>
+            <br />Multi-city center (Lahore + Islamabad + Sargodha): <span className="font-mono">32.5950, 73.7000</span> with 200 km radius
           </div>
         </div>
 
