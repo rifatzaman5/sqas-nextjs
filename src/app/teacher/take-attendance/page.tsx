@@ -176,8 +176,12 @@ export default function TakeAttendancePage() {
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
   };
 
-  const qrImageUrl = qrToken
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(qrToken)}&bgcolor=ffffff&color=1e293b`
+  // QR encodes a full URL → any scanner opens it → app handles login + auto-submit
+  const qrPayload = qrToken && typeof window !== 'undefined'
+    ? `${window.location.origin}/student/mark-attendance?token=${encodeURIComponent(qrToken)}`
+    : qrToken;
+  const qrImageUrl = qrPayload
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(qrPayload)}&bgcolor=ffffff&color=1e293b`
     : null;
 
   const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;

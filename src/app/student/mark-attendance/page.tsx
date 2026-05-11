@@ -1,14 +1,28 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { FaCamera, FaKeyboard, FaCircleCheck, FaCircleXmark, FaCalendarXmark } from 'react-icons/fa6';
 import { getOrCreateDeviceId } from '@/lib/deviceId';
+
+// Accepts a raw token string OR a full URL containing ?token=XXX
+function extractToken(input: string): string {
+  if (!input) return input;
+  try {
+    const url = new URL(input);
+    const t = url.searchParams.get('token');
+    if (t) return t;
+  } catch { /* not a URL — treat as raw token */ }
+  return input.trim();
+}
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function MarkAttendancePage() {
   const today = WEEKDAYS[new Date().getDay()];
   const isWeekend = today === 'Saturday' || today === 'Sunday';
+  const searchParams = useSearchParams();
+  const urlToken = searchParams.get('token');
   const scannerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const html5QrRef = useRef<any>(null);
@@ -20,6 +34,7 @@ export default function MarkAttendancePage() {
   const [deviceId, setDeviceId] = useState<string>('');
   const [tab, setTab] = useState<'camera' | 'manual'>('camera');
   const processedRef = useRef(false);
+  const autoSubmittedRef = useRef(false);
 
   // Resolve a stable device id for device-binding
   useEffect(() => {
@@ -35,6 +50,18 @@ export default function MarkAttendancePage() {
       );
     }
   }, []);
+
+  // Auto-submit if URL contains ?token=XXX (deep-link from QR scan via any scanner)
+  useEffect(() => {
+    if (!urlToken || autoSubmittedRef.current || result) return;
+    autoSubmittedRef.current = true;
+    // Tiny delay so location/deviceId have a chance to resolve
+    const t = setTimeout(() => {
+      submitAttendance(extractToken(urlToken));
+    }, 600);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlToken, result]);
 
   // Start/stop camera scanner
   useEffect(() => {
@@ -56,7 +83,7 @@ export default function MarkAttendancePage() {
             processedRef.current = true;
             await scanner.stop();
             setScanning(false);
-            await submitAttendance(decodedText);
+            await submitAttendance(extractToken(decodedText));
           },
           undefined
         );
@@ -190,7 +217,7 @@ export default function MarkAttendancePage() {
             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#448843] text-slate-800 dark:text-slate-100 dark:bg-slate-700 resize-none"
           />
           <button
-            onClick={() => submitAttendance(manualToken)}
+            onClick={() => submitAttendance(extractToken(manualToken))}
             disabled={!manualToken || submitting}
             className="mt-4 w-full bg-[#448843] text-white py-3 rounded-xl font-medium hover:bg-[#3a7438] disabled:opacity-50"
           >

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {
   FaShieldHalved, FaChalkboardUser, FaGraduationCap,
@@ -16,6 +16,9 @@ const ROLES = [
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next'); // deep-link after login (e.g. /student/mark-attendance?token=XXX)
+  const isQrDeepLink = !!(next && next.includes('token='));
   const [form, setForm] = useState({ role: 'student' as 'admin' | 'teacher' | 'student', username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -32,7 +35,15 @@ export default function LoginPage() {
       const data = await res.json();
       if (res.ok) {
         toast.success(`Welcome, ${data.name}!`);
-        router.push(`/${form.role}`);
+        // If a "next" URL was provided (e.g. from a QR deep-link) and the user
+        // logged in with the matching role, bounce them there. Otherwise default
+        // to the role dashboard.
+        const goNext =
+          next &&
+          (form.role === 'student' ? next.startsWith('/student') :
+           form.role === 'teacher' ? next.startsWith('/teacher') :
+           next.startsWith('/admin'));
+        router.push(goNext ? next : `/${form.role}`);
         router.refresh();
       } else {
         toast.error(data.error || 'Login failed');
@@ -123,6 +134,17 @@ export default function LoginPage() {
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5">
               Choose your role and enter your credentials.
             </p>
+            {next && next.includes('token=') && (
+              <div className="mt-4 p-3 bg-[#f0f9fa] dark:bg-[#1a869a]/20 border border-[#1a869a]/30 rounded-lg flex items-start gap-2.5">
+                <FaQrcode className="text-[#1a869a] text-base mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-[#063a47] dark:text-[#a8c243]">QR Code Detected</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                    Sign in as a <strong>Student</strong> to automatically mark attendance.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Role selector (real segmented control) */}
