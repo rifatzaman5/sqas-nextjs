@@ -34,7 +34,9 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const today = new Date().toISOString().split('T')[0];
+  // Pakistan-local date (Vercel runs UTC, so late-evening attendance in PKT
+  // would otherwise be recorded under the wrong day)
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date());
 
   // Check duplicate attendance (same class, same day) — keep this for data integrity
   const { data: existing } = await supabaseAdmin

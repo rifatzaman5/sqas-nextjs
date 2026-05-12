@@ -20,23 +20,34 @@ export async function POST(req: NextRequest) {
 
   if (!slot) return NextResponse.json({ error: 'Timetable slot not found' }, { status: 404 });
 
-  // Only allow QR generation on the correct day
+  // Compute time in Pakistan timezone (Vercel runs in UTC by default — without
+  // this, an 8 AM class in Lahore would be checked against 3 AM UTC and fail).
   const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const now = new Date();
-  const todayName = WEEKDAYS[now.getDay()];
+  const pkParts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Karachi',
+    weekday: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date());
+  const todayName = pkParts.find(p => p.type === 'weekday')?.value || '';
+  const pkHour    = parseInt(pkParts.find(p => p.type === 'hour')?.value || '0', 10);
+  const pkMinute  = parseInt(pkParts.find(p => p.type === 'minute')?.value || '0', 10);
+  // 'en-US' with hour12:false returns '24' for midnight — normalize to 0
+  const safeHour = pkHour === 24 ? 0 : pkHour;
+
   if (slot.day !== todayName) {
     return NextResponse.json({ error: `Cannot generate QR — this class is on ${slot.day}, not today (${todayName})` }, { status: 400 });
   }
 
   // Time-window guard: only allow during the class period (with small grace before/after).
-  // Prevents teachers from generating QR for a morning class late in the evening.
-  const EARLY_GRACE_MIN = 10;   // allow QR generation up to 10 min before class start
-  const LATE_GRACE_MIN  = 15;   // allow up to 15 min after class end (covers late-comers)
+  const EARLY_GRACE_MIN = 10;
+  const LATE_GRACE_MIN  = 15;
   const toMinutes = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
     return h * 60 + m;
   };
-  const nowMins   = now.getHours() * 60 + now.getMinutes();
+  const nowMins   = safeHour * 60 + pkMinute;
   const startMins = toMinutes(slot.start_time);
   const endMins   = toMinutes(slot.end_time);
   const fmt = (mins: number) => `${Math.floor(mins / 60).toString().padStart(2, '0')}:${(mins % 60).toString().padStart(2, '0')}`;
