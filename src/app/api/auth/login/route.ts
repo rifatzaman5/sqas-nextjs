@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { supabaseAdmin } from '@/lib/supabase';
 import { signToken, COOKIE_NAME } from '@/lib/auth';
-import { createOtp, maskEmail } from '@/lib/otp';
-import { sendOtpEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   const { role, username, password } = await req.json();
@@ -12,7 +10,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
   }
 
-  let user: { id: string | number; name: string; passwordHash: string; email?: string | null } | null = null;
+  let user: { id: string | number; name: string; passwordHash: string } | null = null;
   let enrollment: string | undefined;
 
   if (role === 'admin') {
@@ -32,11 +30,11 @@ export async function POST(req: NextRequest) {
   } else if (role === 'student') {
     const { data } = await supabaseAdmin
       .from('students')
-      .select('id, name, password, enrollment_no, email')
+      .select('id, name, password, enrollment_no')
       .eq('enrollment_no', username)
       .single();
     if (data) {
-      user = { id: data.id, name: data.name, passwordHash: data.password, email: data.email };
+      user = { id: data.id, name: data.name, passwordHash: data.password };
       enrollment = data.enrollment_no;
     }
   }
@@ -50,34 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
   }
 
-  // ── Students must complete OTP before a session cookie is issued ──
-  if (role === 'student') {
-    if (!user.email) {
-      return NextResponse.json(
-        { error: 'No email on file. Please contact your admin to add your email address.' },
-        { status: 400 }
-      );
-    }
-
-    try {
-      const code = await createOtp(user.id as number, 'student');
-      await sendOtpEmail(user.email, user.name, code);
-    } catch (err) {
-      console.error('OTP send failed:', err);
-      return NextResponse.json({ error: 'Could not send verification code. Try again.' }, { status: 500 });
-    }
-
-    return NextResponse.json({
-      otpRequired: true,
-      userId: user.id,
-      role: 'student',
-      name: user.name,
-      maskedEmail: maskEmail(user.email),
-    });
-  }
-
-  // ── Admin / Teacher: existing direct-login flow ──
-  const token = signToken({ id: user.id, role: role as 'admin' | 'teacher', name: user.name, enrollment });
+  const token = signToken({ id: user.id, role: role as 'admin' | 'teacher' | 'student', name: user.name, enrollment });
 
   const response = NextResponse.json({ name: user.name, role });
   response.cookies.set(COOKIE_NAME, token, {

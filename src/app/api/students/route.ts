@@ -11,15 +11,10 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session || session.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await req.json();
-  if (!body.email || !EMAIL_RE.test(body.email)) {
-    return NextResponse.json({ error: 'A valid email is required (used for login OTP).' }, { status: 400 });
-  }
   const hashed = await bcrypt.hash(body.password || '123', 10);
   const { data, error } = await supabaseAdmin
     .from('students')
@@ -35,9 +30,6 @@ export async function PUT(req: NextRequest) {
   if (!session || session.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await req.json();
   const { id, password, ...rest } = body;
-  if (rest.email !== undefined && (!rest.email || !EMAIL_RE.test(rest.email))) {
-    return NextResponse.json({ error: 'A valid email is required (used for login OTP).' }, { status: 400 });
-  }
   const updates: Record<string, unknown> = { ...rest };
   if (password) updates.password = await bcrypt.hash(password, 10);
   const { data, error } = await supabaseAdmin.from('students').update(updates).eq('id', id).select().single();
