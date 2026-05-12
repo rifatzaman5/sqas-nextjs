@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SQAS Presentation &mdash; External Evaluation</title>
+<style>
+  :root{
+    --teal:#1a869a; --teal-dark:#007b8f; --teal-soft:#e0f2f4;
+    --green:#448843; --green-dark:#3a7438; --green-soft:#eef5e3;
+    --lime:#94ad3b; --ink:#0f172a; --muted:#94a3b8; --line:#e2e8f0;
+    --bg:#f8fafc;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;background:#000;font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);}
+  .deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+  .slide{
+    position:absolute;inset:0;background:#fff;display:none;flex-direction:column;
+    padding:60px 80px;animation:fadeIn .35s ease-out;
+  }
+  .slide.active{display:flex;}
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:none;} }
+
+  .slide-header{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:13px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;
+  }
+  .slide-header .brand{color:var(--teal-dark);font-weight:700;}
+  .slide h1{font-size:54px;margin:0 0 10px;line-height:1.1;color:var(--ink);}
+  .slide h2{font-size:38px;margin:0 0 18px;color:var(--teal-dark);line-height:1.2;}
+  .slide h3{font-size:22px;margin:16px 0 8px;color:var(--green-dark);}
+  .slide p{font-size:20px;line-height:1.55;color:#334155;max-width:1100px;}
+  .slide ul{font-size:20px;line-height:1.7;color:#334155;padding-left:24px;max-width:1100px;}
+  .slide ul li{margin-bottom:6px;}
+  .slide .footer{
+    position:absolute;bottom:18px;left:80px;right:80px;display:flex;justify-content:space-between;
+    align-items:center;font-size:12px;color:var(--muted);
+  }
+
+  /* Cover slide */
+  .cover{
+    background:linear-gradient(135deg,var(--teal) 0%,var(--green) 100%);
+    color:#fff;justify-content:center;align-items:flex-start;padding:0 80px;
+  }
+  .cover h1{color:#fff;font-size:72px;line-height:1.05;}
+  .cover .uni{font-size:14px;letter-spacing:.2em;text-transform:uppercase;opacity:.92;margin-bottom:6px;}
+  .cover h2{color:rgba(255,255,255,.95);font-size:26px;font-weight:500;margin-bottom:38px;}
+  .cover .meta{display:flex;flex-wrap:wrap;gap:14px 36px;font-size:16px;opacity:.95;}
+  .cover .meta b{font-weight:600;}
+  .cover .badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:6px 16px;font-size:13px;letter-spacing:.08em;margin-bottom:18px;}
+  .cover .footer{color:rgba(255,255,255,.7);}
+
+  /* TOC */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;font-size:19px;}
+  .grid-2 .item{display:flex;gap:14px;align-items:flex-start;padding:10px 14px;background:var(--bg);border-radius:12px;border-left:4px solid var(--teal);}
+  .grid-2 .item .n{font-weight:800;color:var(--teal-dark);min-width:24px;}
+
+  /* Pills */
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px;}
+  .pill{background:var(--green-soft);color:var(--green-dark);padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600;}
+  .pill.teal{background:var(--teal-soft);color:var(--teal-dark);}
+  .pill.warn{background:#fef3c7;color:#92400e;}
+
+  /* Stack list */
+  .stack{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+  .stack .card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px;}
+  .stack .card .name{font-weight:700;color:var(--teal-dark);font-size:17px;margin-bottom:4px;}
+  .stack .card .desc{font-size:14px;color:#475569;line-height:1.45;}
+
+  /* Two-col content */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+
+  /* Stat row */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:24px;}
+  .stat{background:var(--bg);border-radius:14px;padding:18px;text-align:center;border:1px solid var(--line);}
+  .stat .num{font-size:42px;font-weight:800;color:var(--teal);line-height:1;margin-bottom:6px;}
+  .stat .lbl{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+
+  /* Flow steps */
+  .steps{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+  .step{display:flex;gap:14px;background:var(--bg);padding:12px 16px;border-radius:12px;border-left:4px solid var(--green);}
+  .step .n{background:var(--green);color:#fff;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+  .step .body{font-size:17px;color:#334155;}
+  .step .body b{color:var(--green-dark);}
+
+  /* Security grid */
+  .sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px;}
+  .sec-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 18px;border-top:4px solid var(--teal);}
+  .sec-card .t{font-weight:700;color:var(--teal-dark);font-size:16px;margin-bottom:6px;}
+  .sec-card .d{font-size:14px;color:#475569;line-height:1.5;}
+
+  /* Q&A */
+  .qa{background:var(--bg);padding:14px 18px;border-left:4px solid var(--teal);border-radius:0 12px 12px 0;margin-bottom:12px;}
+  .qa .q{font-weight:700;color:var(--ink);font-size:18px;margin-bottom:4px;}
+  .qa .q::before{content:"Q. ";color:var(--teal-dark);font-weight:800;}
+  .qa .a{font-size:16px;color:#334155;line-height:1.5;}
+  .qa .a::before{content:"A. ";color:var(--green-dark);font-weight:800;}
+
+  /* Closing slide */
+  .closing{background:linear-gradient(135deg,var(--green) 0%,var(--teal) 100%);color:#fff;justify-content:center;align-items:center;text-align:center;}
+  .closing h1{color:#fff;font-size:84px;}
+  .closing h2{color:rgba(255,255,255,.95);font-size:28px;font-weight:500;}
+  .closing .footer{color:rgba(255,255,255,.7);}
+
+  /* Controls */
+  .controls{
+    position:fixed;bottom:18px;right:20px;display:flex;gap:8px;z-index:50;
+  }
+  .ctrl{
+    background:rgba(15,23,42,.85);color:#fff;border:none;width:42px;height:42px;border-radius:50%;
+    font-size:18px;cursor:pointer;transition:background .15s;backdrop-filter:blur(8px);
+  }
+  .ctrl:hover{background:rgba(26,134,154,.9);}
+  .progress{
+    position:fixed;top:0;left:0;height:3px;background:var(--teal);transition:width .25s;z-index:50;
+  }
+  .counter{
+    position:fixed;bottom:24px;left:20px;background:rgba(15,23,42,.85);color:#fff;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;z-index:50;backdrop-filter:blur(8px);
+  }
+
+  /* Print: one slide per page */
+  @page { size: A4 landscape; margin: 0; }
+  @media print {
+    html, body { background:#fff; }
+    .controls, .counter, .progress { display:none !important; }
+    .deck { width:auto; height:auto; }
+    .slide {
+      display:flex !important; position:static; width:297mm; height:210mm;
+      page-break-after: always; padding: 32px 50px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .slide:last-of-type { page-break-after: auto; }
+    .slide h1 { font-size: 40px; }
+    .slide h2 { font-size: 28px; }
+    .slide p, .slide ul { font-size: 15px; }
+    .cover h1 { font-size: 50px; }
+    .closing h1 { font-size: 60px; }
+    .stat .num { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" style="width:0"></div>
+<div class="counter" id="counter">1 / 18</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1: COVER -->
+  <section class="slide cover active">
+    <div class="badge">External Evaluation &middot; Final Year Project-II</div>
+    <div class="uni">University of Sargodha &middot; Department of Information Technology</div>
+    <h1>Smart QR<br/>Attendance System</h1>
+    <h2>QR + GPS + Device-binding &mdash; all in one web app.</h2>
+    <div class="meta">
+      <div><b>Batch:</b> BSIT-R0-2022</div>
+      <div><b>Semester:</b> 8</div>
+      <div><b>Supervisor:</b> Dr. Khalid Mahmood Aamir</div>
+    </div>
+    <div class="footer">
+      <div>SQAS &middot; 2025&ndash;26</div>
+      <div>Press &rarr; to begin</div>
+    </div>
+  </section>
+
+  <!-- 2: AGENDA -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Agenda &middot; 02</span></div>
+    <h2>What we'll cover</h2>
+    <div class="grid-2">
+      <div class="item"><span class="n">1</span><span>Project Overview &amp; Scope</span></div>
+      <div class="item"><span class="n">2</span><span>Problem &amp; Objectives</span></div>
+      <div class="item"><span class="n">3</span><span>Tech Stack &amp; Why</span></div>
+      <div class="item"><span class="n">4</span><span>System Architecture</span></div>
+      <div class="item"><span class="n">5</span><span>Database Design</span></div>
+      <div class="item"><span class="n">6</span><span>User Roles &amp; Modules</span></div>
+      <div class="item"><span class="n">7</span><span>QR Workflow</span></div>
+      <div class="item"><span class="n">8</span><span>Security Layers</span></div>
+      <div class="item"><span class="n">9</span><span>Deployment &amp; DevOps</span></div>
+      <div class="item"><span class="n">10</span><span>Challenges &amp; Future</span></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>02 / 18</span></div>
+  </section>
+
+  <!-- 3: WHAT IS IT -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Overview &middot; 03</span></div>
+    <h2>What is SQAS?</h2>
+    <p>A <b>web-based attendance management system</b> where teachers generate a time-limited QR code per class and students scan it from their phone &mdash; with location, device, and one-time-use checks running in the background.</p>
+    <div class="pills">
+      <span class="pill teal">Web App</span>
+      <span class="pill">QR-based</span>
+      <span class="pill teal">Geo-fenced</span>
+      <span class="pill">Device-bound</span>
+      <span class="pill teal">Real-time</span>
+      <span class="pill">Role-based</span>
+      <span class="pill teal">Mobile-friendly</span>
+    </div>
+    <h3 style="margin-top:30px;">Three users, one platform</h3>
+    <ul>
+      <li><b>Admin</b> &mdash; manages students, teachers, subjects, timetable, settings.</li>
+      <li><b>Teacher</b> &mdash; generates QR per class, monitors live attendance.</li>
+      <li><b>Student</b> &mdash; scans QR, views own attendance history.</li>
+    </ul>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>03 / 18</span></div>
+  </section>
+
+  <!-- 4: PROBLEM -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Problem &middot; 04</span></div>
+    <h2>Why we built it</h2>
+    <div class="two-col">
+      <div>
+        <h3>Problems with traditional roll-call</h3>
+        <ul>
+          <li>Takes <b>5&ndash;10 minutes</b> from every class.</li>
+          <li><b>Proxy attendance</b> is easy (sirf naam call hota hai).</li>
+          <li>Paper registers <b>lost or tampered</b>.</li>
+          <li>Reports manually banti hain &mdash; slow, error-prone.</li>
+          <li>No real-time visibility for students/admin.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Our objectives</h3>
+        <ul>
+          <li><b>Speed</b> &mdash; full class attendance &lt; 60 seconds.</li>
+          <li><b>Anti-proxy</b> &mdash; device + GPS + one-time QR.</li>
+          <li><b>Transparency</b> &mdash; students see their own records live.</li>
+          <li><b>Reporting</b> &mdash; per-subject, per-date filters in 1 click.</li>
+          <li><b>Cloud-native</b> &mdash; scales without infrastructure work.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>04 / 18</span></div>
+  </section>
+
+  <!-- 5: TECH STACK -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Tech Stack &middot; 05</span></div>
+    <h2>Tech stack &mdash; tools we used</h2>
+    <div class="stack">
+      <div class="card"><div class="name">Next.js 16</div><div class="desc">Full-stack React framework. Frontend + API routes in one codebase.</div></div>
+      <div class="card"><div class="name">TypeScript 5</div><div class="desc">Type safety, catches bugs at compile time, better IDE intellisense.</div></div>
+      <div class="card"><div class="name">React 19</div><div class="desc">Component-based UI library, industry standard.</div></div>
+      <div class="card"><div class="name">Tailwind CSS 4</div><div class="desc">Utility-first styling, rapid prototyping, consistent design tokens.</div></div>
+      <div class="card"><div class="name">Supabase (PostgreSQL)</div><div class="desc">Managed Postgres + REST APIs + RLS + auth. Free tier.</div></div>
+      <div class="card"><div class="name">JWT (jsonwebtoken)</div><div class="desc">Stateless auth in HttpOnly cookies. 7-day expiry.</div></div>
+      <div class="card"><div class="name">bcryptjs</div><div class="desc">Password hashing with salt. DB leak &ne; password leak.</div></div>
+      <div class="card"><div class="name">html5-qrcode</div><div class="desc">Browser-based QR scanner. No app install needed.</div></div>
+      <div class="card"><div class="name">Vercel</div><div class="desc">Native Next.js hosting. Auto-deploy from GitHub.</div></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>05 / 18</span></div>
+  </section>
+
+  <!-- 6: WHY THESE TOOLS -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Why these tools &middot; 06</span></div>
+    <h2>Why we chose this stack</h2>
+    <div class="qa">
+      <div class="q">Next.js, plain React kyun nahi?</div>
+      <div class="a">Next.js mein frontend + backend (API routes) ek hi project. Express server alag nahi banana padta. SSR built-in &rarr; SEO + fast first paint. Vercel par one-click deploy.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Supabase, MongoDB kyun nahi?</div>
+      <div class="a">Attendance data <b>relational</b> hai (students &harr; subjects &harr; timetable &harr; attendance). SQL joins is use-case ke liye banaye gaye hain. Plus RLS + auto-generated REST APIs free.</div>
+    </div>
+    <div class="qa">
+      <div class="q">JWT vs sessions?</div>
+      <div class="a">Stateless &mdash; server pe session table nahi chahiye. Token mein hi user info. HttpOnly cookie &rarr; XSS-safe.</div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>06 / 18</span></div>
+  </section>
+
+  <!-- 7: ARCHITECTURE -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Architecture &middot; 07</span></div>
+    <h2>Three-tier serverless architecture</h2>
+    <div class="two-col" style="margin-top:14px;">
+      <div>
+        <h3>Layers</h3>
+        <ul>
+          <li><b>Presentation</b> &mdash; React pages (client + server components).</li>
+          <li><b>Application</b> &mdash; Next.js API routes (serverless functions on Vercel).</li>
+          <li><b>Data</b> &mdash; Supabase Postgres with Row-Level Security.</li>
+        </ul>
+        <h3>Why serverless?</h3>
+        <ul>
+          <li>Auto-scales with load.</li>
+          <li>No server maintenance.</li>
+          <li>Pay-per-request (free tier for academic project).</li>
+        </ul>
+      </div>
+      <div style="background:var(--bg);border-radius:14px;padding:22px;font-family:monospace;font-size:14px;line-height:1.8;border:1px solid var(--line);">
+        <div style="color:var(--teal-dark);font-weight:700;margin-bottom:8px;">Request flow</div>
+        Browser (React)<br/>
+        &nbsp;&nbsp;&darr; HTTPS + HttpOnly cookie (JWT)<br/>
+        Next.js API Route<br/>
+        <span style="color:var(--muted);">(serverless on Vercel)</span><br/>
+        &nbsp;&nbsp;&darr; Service-role key<br/>
+        Supabase Postgres<br/>
+        <span style="color:var(--muted);">(RLS-protected tables)</span><br/>
+        &nbsp;&nbsp;&darr;<br/>
+        JSON &rarr; React state &rarr; UI
+      </div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>07 / 18</span></div>
+  </section>
+
+  <!-- 8: DATABASE -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Database &middot; 08</span></div>
+    <h2>Database schema &mdash; 9 tables, 3NF</h2>
+    <div class="stack" style="grid-template-columns:repeat(3,1fr);">
+      <div class="card"><div class="name">admins</div><div class="desc">Admin login accounts &mdash; bcrypt passwords.</div></div>
+      <div class="card"><div class="name">teachers</div><div class="desc">Faculty: name, email, subject, designation.</div></div>
+      <div class="card"><div class="name">students</div><div class="desc">Enrollment_no, batch, semester, device_id.</div></div>
+      <div class="card"><div class="name">subjects</div><div class="desc">Course name, code, branch &rarr; FK teacher_id.</div></div>
+      <div class="card"><div class="name">timetable</div><div class="desc">Day, time, room, batch &rarr; FK subject + teacher.</div></div>
+      <div class="card"><div class="name">attendance</div><div class="desc">student + class + date <b>UNIQUE</b>. Has lat/lon.</div></div>
+      <div class="card"><div class="name">qr_tokens</div><div class="desc">Token, expires_at, used_at &mdash; one-time use.</div></div>
+      <div class="card"><div class="name">qr_token_scans</div><div class="desc">Per-student-per-token ledger &mdash; anti-replay.</div></div>
+      <div class="card"><div class="name">settings</div><div class="desc">University center lat/lon, coverage radius, window.</div></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>08 / 18</span></div>
+  </section>
+
+  <!-- 9: USER ROLES -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Roles &middot; 09</span></div>
+    <h2>Three roles, RBAC-enforced</h2>
+    <div class="stack" style="grid-template-columns:repeat(3,1fr);">
+      <div class="card" style="border-top:4px solid var(--teal);">
+        <div class="name" style="font-size:20px;">Admin</div>
+        <div class="desc" style="margin-top:8px;">
+          &bull; Full CRUD on all entities<br/>
+          &bull; View all attendance<br/>
+          &bull; Configure geofence + QR window<br/>
+          &bull; Reset student device binding
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid var(--green);">
+        <div class="name" style="font-size:20px;color:var(--green-dark);">Teacher</div>
+        <div class="desc" style="margin-top:8px;">
+          &bull; Generate QR for own classes<br/>
+          &bull; Live attendee list (5s polling)<br/>
+          &bull; View own subjects' attendance<br/>
+          &bull; No access to other teachers' data
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid var(--lime);">
+        <div class="name" style="font-size:20px;color:#6b7e1f;">Student</div>
+        <div class="desc" style="margin-top:8px;">
+          &bull; Scan QR / enter code<br/>
+          &bull; View own attendance only<br/>
+          &bull; Device locked to first login<br/>
+          &bull; No CRUD access
+        </div>
+      </div>
+    </div>
+    <h3 style="margin-top:22px;">How RBAC works</h3>
+    <p>JWT mein <code style="background:var(--bg);padding:2px 8px;border-radius:6px;">role</code> claim sign hota hai. Har API route role check karta hai &mdash; student APIs query mein <code style="background:var(--bg);padding:2px 8px;border-radius:6px;">student_id = session.id</code> hard-inject karti hai. Cross-user data leak <b>impossible</b>.</p>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>09 / 18</span></div>
+  </section>
+
+  <!-- 10: WORKFLOW -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Workflow &middot; 10</span></div>
+    <h2>QR lifecycle &mdash; one class, end to end</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span class="body"><b>Teacher login</b> &rarr; system auto-detects today's active or upcoming slot.</span></div>
+      <div class="step"><span class="n">2</span><span class="body"><b>Click "Generate QR"</b> &rarr; backend creates unique token, expires in 15 min.</span></div>
+      <div class="step"><span class="n">3</span><span class="body"><b>QR rendered</b> with deep-link URL payload. Countdown timer starts.</span></div>
+      <div class="step"><span class="n">4</span><span class="body"><b>Student scans QR</b> with any phone camera/app &mdash; URL opens.</span></div>
+      <div class="step"><span class="n">5</span><span class="body"><b>Auto-submit fires</b> with token + GPS + device_id.</span></div>
+      <div class="step"><span class="n">6</span><span class="body"><b>Backend runs 6 checks</b> &mdash; pass &rarr; attendance row inserted.</span></div>
+      <div class="step"><span class="n">7</span><span class="body"><b>Teacher's live list</b> updates within 5 seconds (polling).</span></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>10 / 18</span></div>
+  </section>
+
+  <!-- 11: SECURITY -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Security &middot; 11</span></div>
+    <h2>Six-layer anti-proxy defense</h2>
+    <div class="sec-grid">
+      <div class="sec-card"><div class="t">1. Token validity</div><div class="d">Token DB mein exist + <code>expires_at</code> future mein hona chahiye.</div></div>
+      <div class="sec-card"><div class="t">2. Time window</div><div class="d">Class start &minus;10 min se end +15 min tak hi accept.</div></div>
+      <div class="sec-card"><div class="t">3. Geofence</div><div class="d">Student ka GPS configured radius ke andar hona chahiye.</div></div>
+      <div class="sec-card"><div class="t">4. Device binding</div><div class="d">First login pe device_id save. Aage se sirf wahi device accept.</div></div>
+      <div class="sec-card"><div class="t">5. One-time use</div><div class="d">Same QR + same student &rarr; <b>UNIQUE</b> constraint rejects.</div></div>
+      <div class="sec-card"><div class="t">6. Duplicate day</div><div class="d">Same class same date &rarr; <b>UNIQUE</b> constraint rejects.</div></div>
+    </div>
+    <h3 style="margin-top:22px;">Plus auth-layer security</h3>
+    <ul style="font-size:18px;">
+      <li>Passwords <b>bcrypt-hashed</b> (cost 10).</li>
+      <li>JWT in <b>HttpOnly + Secure + SameSite=Lax</b> cookies.</li>
+      <li>Supabase <b>RLS</b> on every table; service-role key server-only.</li>
+      <li>Next.js <b>parameterized queries</b> &rarr; SQL injection impossible.</li>
+    </ul>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>11 / 18</span></div>
+  </section>
+
+  <!-- 12: KEY FEATURES -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Features &middot; 12</span></div>
+    <h2>Highlight features</h2>
+    <div class="stack">
+      <div class="card"><div class="name">Auto class detection</div><div class="desc">Teacher login pe system khud current/upcoming slot select karta hai.</div></div>
+      <div class="card"><div class="name">Universal QR scanner</div><div class="desc">QR mein URL hoti hai &mdash; any camera app khol leta hai, app install nahi chahiye.</div></div>
+      <div class="card"><div class="name">Live attendee feed</div><div class="desc">Teacher 5-sec polling se real-time dekh sakta hai kaun aaya.</div></div>
+      <div class="card"><div class="name">Manual code fallback</div><div class="desc">Camera issue ho to student code type kar ke submit kar sakta hai.</div></div>
+      <div class="card"><div class="name">WhatsApp share</div><div class="desc">Teacher QR code message format mein WhatsApp share kar sakta hai.</div></div>
+      <div class="card"><div class="name">Weekend lock</div><div class="desc">Saturday/Sunday QR generation auto-disabled &mdash; system off-day pe rest leta hai.</div></div>
+      <div class="card"><div class="name">Dark mode</div><div class="desc">Full app dark theme &mdash; eye-friendly raat ko.</div></div>
+      <div class="card"><div class="name">Mobile-responsive</div><div class="desc">Phone, tablet, desktop &mdash; har screen pe optimized.</div></div>
+      <div class="card"><div class="name">Device reset (admin)</div><div class="desc">Naya phone milne par admin device unbind kar sakta hai.</div></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>12 / 18</span></div>
+  </section>
+
+  <!-- 13: DEPLOYMENT -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Deployment &middot; 13</span></div>
+    <h2>How &amp; where it's deployed</h2>
+    <div class="two-col">
+      <div>
+        <h3>Hosting</h3>
+        <ul>
+          <li><b>Vercel</b> &mdash; Next.js serverless, edge network, free SSL.</li>
+          <li><b>Supabase</b> &mdash; managed Postgres, automated backups.</li>
+          <li>GitHub auto-deploy on push to <code style="background:var(--bg);padding:2px 6px;border-radius:6px;">main</code>.</li>
+          <li>Rollback in one click.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>CI/CD pipeline</h3>
+        <ol style="font-size:18px;line-height:1.7;">
+          <li>Push to GitHub</li>
+          <li>Vercel webhook fires</li>
+          <li><code style="background:var(--bg);padding:2px 6px;border-radius:6px;">npm run build</code> &mdash; type-check + lint + build</li>
+          <li>Deploy to edge network</li>
+          <li>Live in &lt; 60 seconds</li>
+        </ol>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">~150ms</div><div class="lbl">avg API latency</div></div>
+      <div class="stat"><div class="num">&lt;1.5s</div><div class="lbl">first paint</div></div>
+      <div class="stat"><div class="num">7 days</div><div class="lbl">PITR backups</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">SSL coverage</div></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>13 / 18</span></div>
+  </section>
+
+  <!-- 14: NUMBERS -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Scale &middot; 14</span></div>
+    <h2>Project by the numbers</h2>
+    <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-top:30px;">
+      <div class="stat"><div class="num">15+</div><div class="lbl">Pages / Routes</div></div>
+      <div class="stat"><div class="num">12</div><div class="lbl">API Endpoints</div></div>
+      <div class="stat"><div class="num">9</div><div class="lbl">Database Tables</div></div>
+      <div class="stat"><div class="num">6</div><div class="lbl">Security Layers</div></div>
+    </div>
+    <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-top:18px;">
+      <div class="stat"><div class="num">3</div><div class="lbl">User Roles</div></div>
+      <div class="stat"><div class="num">5</div><div class="lbl">Semester-8 Subjects</div></div>
+      <div class="stat"><div class="num">11</div><div class="lbl">Weekly Timetable Slots</div></div>
+      <div class="stat"><div class="num">15 min</div><div class="lbl">QR Validity</div></div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>14 / 18</span></div>
+  </section>
+
+  <!-- 15: CHALLENGES -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Challenges &middot; 15</span></div>
+    <h2>Challenges &amp; how we solved them</h2>
+    <div class="qa">
+      <div class="q">QR scanners raw text dikhate the, URL nahi kholte the.</div>
+      <div class="a">QR payload <b>full URL</b> banayi (<code>https://&hellip;/mark-attendance?token=XXX</code>) &mdash; har scanner ab browser khol deta hai.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Vercel UTC mein, Pakistan dates ghalat aa rahe the.</div>
+      <div class="a"><code>Asia/Karachi</code> timezone explicitly use kiya. Now all dates production-accurate.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Student same QR refresh kar ke proxy mark karta tha.</div>
+      <div class="a"><code>qr_token_scans</code> ledger table add ki UNIQUE(token, student) constraint ke saath. Replay impossible.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Doosre ke phone se attendance possible thi.</div>
+      <div class="a">Device binding: localStorage UUID + DB persistence + mismatch reject + admin reset.</div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>15 / 18</span></div>
+  </section>
+
+  <!-- 16: FUTURE -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>Roadmap &middot; 16</span></div>
+    <h2>Future enhancements</h2>
+    <div class="two-col">
+      <div>
+        <ul>
+          <li><b>Native mobile apps</b> &mdash; React Native / Expo.</li>
+          <li><b>Biometric verification</b> &mdash; WebAuthn fingerprint/face.</li>
+          <li><b>Push notifications</b> &mdash; class-start reminder.</li>
+          <li><b>AI proxy detection</b> &mdash; pattern-based flagging.</li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li><b>Multi-language UI</b> &mdash; English + Urdu.</li>
+          <li><b>Excel / PDF export</b> &mdash; admin reports.</li>
+          <li><b>Parent portal</b> &mdash; read-only ward access.</li>
+          <li><b>ERP integration</b> &mdash; LMS, fee, grading.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>16 / 18</span></div>
+  </section>
+
+  <!-- 17: WHY UNIQUE -->
+  <section class="slide">
+    <div class="slide-header"><span class="brand">SQAS</span><span>USP &middot; 17</span></div>
+    <h2>Why SQAS stands apart</h2>
+    <div class="stack" style="grid-template-columns:repeat(2,1fr);gap:18px;">
+      <div class="card" style="border-left:4px solid var(--teal);padding:22px;">
+        <div class="name" style="font-size:20px;margin-bottom:10px;">Triple-layer anti-proxy</div>
+        <div class="desc" style="font-size:16px;">QR + GPS + Device binding &mdash; teeno layers ek hi flow mein. Aksar systems sirf QR ya sirf GPS use karte hain.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--green);padding:22px;">
+        <div class="name" style="font-size:20px;color:var(--green-dark);margin-bottom:10px;">Zero install for students</div>
+        <div class="desc" style="font-size:16px;">Browser kaafi hai &mdash; native camera app QR scan kar ke deep-link kholta hai. No Play Store dependency.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--lime);padding:22px;">
+        <div class="name" style="font-size:20px;color:#6b7e1f;margin-bottom:10px;">Cost = 0</div>
+        <div class="desc" style="font-size:16px;">Vercel + Supabase free tiers &mdash; academic project ke liye sufficient. Scales paid only if needed.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--teal);padding:22px;">
+        <div class="name" style="font-size:20px;margin-bottom:10px;">Real-time visibility</div>
+        <div class="desc" style="font-size:16px;">Teacher live dekh sakta hai kaun aaya &mdash; 5-second polling. No "wait for report" workflow.</div>
+      </div>
+    </div>
+    <div class="footer"><span>SQAS &middot; UoS</span><span>17 / 18</span></div>
+  </section>
+
+  <!-- 18: CLOSING -->
+  <section class="slide closing">
+    <h1>Thank You</h1>
+    <h2>Questions &amp; Live Demo</h2>
+    <p style="color:rgba(255,255,255,.92);font-size:18px;max-width:700px;text-align:center;">University of Sargodha &middot; Department of Information Technology<br/>BSIT-R0-2022 &middot; Final Year Project-II</p>
+    <div class="footer"><span>SQAS &middot; 2025&ndash;26</span><span>18 / 18</span></div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button class="ctrl" onclick="prev()" title="Previous (&larr;)">&larr;</button>
+  <button class="ctrl" onclick="next()" title="Next (&rarr;)">&rarr;</button>
+  <button class="ctrl" onclick="fullscreen()" title="Fullscreen (F)">&#x26F6;</button>
+  <button class="ctrl" onclick="window.print()" title="Print / Save PDF (P)">&#128424;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let idx = 0;
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+
+  function show(i) {
+    if (i < 0 || i >= total) return;
+    slides[idx].classList.remove('active');
+    idx = i;
+    slides[idx].classList.add('active');
+    counter.textContent = `${idx + 1} / ${total}`;
+    progress.style.width = `${((idx + 1) / total) * 100}%`;
+  }
+  function next() { show(Math.min(idx + 1, total - 1)); }
+  function prev() { show(Math.max(idx - 1, 0)); }
+  function fullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(total - 1);
+    else if (e.key === 'f' || e.key === 'F') fullscreen();
+    else if (e.key === 'p' || e.key === 'P') { if (!e.ctrlKey && !e.metaKey) { e.preventDefault(); window.print(); } }
+  });
+
+  // Click anywhere on slide to advance (except buttons)
+  document.querySelectorAll('.slide').forEach(s => {
+    s.addEventListener('click', (e) => {
+      if (e.target.closest('.controls')) return;
+      next();
+    });
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>

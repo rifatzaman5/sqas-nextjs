@@ -148,7 +148,7 @@ export default function StudentsPage() {
               {[
                 { label: 'Enrollment No.', key: 'enrollment_no', type: 'text', required: true },
                 { label: 'Full Name', key: 'name', type: 'text', required: true },
-                { label: 'Email', key: 'email', type: 'email', required: false },
+                { label: 'Email (required for OTP login)', key: 'email', type: 'email', required: true },
                 { label: 'Phone', key: 'phone', type: 'text', required: false },
                 { label: editing ? 'New Password (leave blank to keep)' : 'Password', key: 'password', type: 'password', required: !editing },
               ].map(f => (

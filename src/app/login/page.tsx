@@ -1,11 +1,11 @@
 'use client';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {
   FaShieldHalved, FaChalkboardUser, FaGraduationCap,
   FaQrcode, FaEye, FaEyeSlash, FaArrowRightLong,
-  FaLocationDot, FaBuildingColumns,
+  FaLocationDot, FaBuildingColumns, FaEnvelope, FaXmark,
 } from 'react-icons/fa6';
 
 const ROLES = [
@@ -30,6 +30,34 @@ function LoginPageInner() {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
+  // OTP modal state (only used for students)
+  const [otp, setOtp] = useState<{
+    open: boolean;
+    userId: number | null;
+    name: string;
+    maskedEmail: string;
+    code: string;
+    verifying: boolean;
+    cooldown: number;
+  }>({ open: false, userId: null, name: '', maskedEmail: '', code: '', verifying: false, cooldown: 30 });
+
+  // Resend cooldown ticker
+  useEffect(() => {
+    if (!otp.open || otp.cooldown <= 0) return;
+    const t = setInterval(() => setOtp((s) => ({ ...s, cooldown: Math.max(0, s.cooldown - 1) })), 1000);
+    return () => clearInterval(t);
+  }, [otp.open, otp.cooldown]);
+
+  const goAfterLogin = (role: 'admin' | 'teacher' | 'student') => {
+    const goNext =
+      next &&
+      (role === 'student' ? next.startsWith('/student') :
+       role === 'teacher' ? next.startsWith('/teacher') :
+       next.startsWith('/admin'));
+    router.push(goNext ? next : `/${role}`);
+    router.refresh();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -40,25 +68,74 @@ function LoginPageInner() {
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (res.ok) {
-        toast.success(`Welcome, ${data.name}!`);
-        // If a "next" URL was provided (e.g. from a QR deep-link) and the user
-        // logged in with the matching role, bounce them there. Otherwise default
-        // to the role dashboard.
-        const goNext =
-          next &&
-          (form.role === 'student' ? next.startsWith('/student') :
-           form.role === 'teacher' ? next.startsWith('/teacher') :
-           next.startsWith('/admin'));
-        router.push(goNext ? next : `/${form.role}`);
-        router.refresh();
-      } else {
+      if (!res.ok) {
         toast.error(data.error || 'Login failed');
+        return;
       }
+      if (data.otpRequired) {
+        toast.success(`Code sent to ${data.maskedEmail}`);
+        setOtp({
+          open: true,
+          userId: data.userId,
+          name: data.name,
+          maskedEmail: data.maskedEmail,
+          code: '',
+          verifying: false,
+          cooldown: 30,
+        });
+        return;
+      }
+      toast.success(`Welcome, ${data.name}!`);
+      goAfterLogin(form.role);
     } catch {
       toast.error('Server error. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otp.code.length !== 6) return;
+    setOtp((s) => ({ ...s, verifying: true }));
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: otp.userId, role: 'student', code: otp.code }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Verification failed');
+        setOtp((s) => ({ ...s, verifying: false, code: '' }));
+        return;
+      }
+      toast.success(`Welcome, ${data.name}!`);
+      setOtp((s) => ({ ...s, open: false, verifying: false }));
+      goAfterLogin('student');
+    } catch {
+      toast.error('Server error. Please try again.');
+      setOtp((s) => ({ ...s, verifying: false }));
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (otp.cooldown > 0) return;
+    try {
+      const res = await fetch('/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: otp.userId, role: 'student' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Resend failed');
+        return;
+      }
+      toast.success(`New code sent to ${data.maskedEmail}`);
+      setOtp((s) => ({ ...s, code: '', cooldown: 30 }));
+    } catch {
+      toast.error('Server error. Please try again.');
     }
   };
 
@@ -273,6 +350,145 @@ function LoginPageInner() {
           </p>
         </div>
       </main>
+
+      {otp.open && (
+        <OtpModal
+          otp={otp}
+          setOtp={setOtp}
+          onVerify={handleVerifyOtp}
+          onResend={handleResendOtp}
+        />
+      )}
+    </div>
+  );
+}
+
+type OtpState = {
+  open: boolean;
+  userId: number | null;
+  name: string;
+  maskedEmail: string;
+  code: string;
+  verifying: boolean;
+  cooldown: number;
+};
+
+function OtpModal({
+  otp,
+  setOtp,
+  onVerify,
+  onResend,
+}: {
+  otp: OtpState;
+  setOtp: React.Dispatch<React.SetStateAction<OtpState>>;
+  onVerify: (e: React.FormEvent) => void;
+  onResend: () => void;
+}) {
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
+
+  const setDigit = (i: number, val: string) => {
+    const clean = val.replace(/\D/g, '').slice(-1);
+    const arr = otp.code.padEnd(6, ' ').split('');
+    arr[i] = clean || ' ';
+    const next = arr.join('').replace(/ /g, '');
+    setOtp((s) => ({ ...s, code: next }));
+    if (clean && i < 5) inputRefs.current[i + 1]?.focus();
+  };
+
+  const handleKey = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !otp.code[i] && i > 0) {
+      inputRefs.current[i - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pasted) return;
+    setOtp((s) => ({ ...s, code: pasted }));
+    inputRefs.current[Math.min(pasted.length, 5)]?.focus();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md">
+        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-700">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#f0f9fa] dark:bg-[#1a869a]/20 rounded-xl flex items-center justify-center">
+              <FaEnvelope className="text-[#1a869a]" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-slate-800 dark:text-slate-100">Verify your identity</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Enter the 6-digit code we just sent</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOtp((s) => ({ ...s, open: false, code: '' }))}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            aria-label="Close"
+          >
+            <FaXmark />
+          </button>
+        </div>
+
+        <form onSubmit={onVerify} className="p-5 space-y-5">
+          <div className="text-center">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Code sent to <strong className="text-slate-800 dark:text-slate-100">{otp.maskedEmail}</strong>
+            </p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Expires in 5 minutes</p>
+          </div>
+
+          <div className="flex justify-center gap-2" onPaste={handlePaste}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <input
+                key={i}
+                ref={(el) => { inputRefs.current[i] = el; }}
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
+                maxLength={1}
+                value={otp.code[i] || ''}
+                onChange={(e) => setDigit(i, e.target.value)}
+                onKeyDown={(e) => handleKey(i, e)}
+                className="w-11 h-12 text-center text-xl font-bold border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1a869a] focus:border-[#1a869a]"
+              />
+            ))}
+          </div>
+
+          <button
+            type="submit"
+            disabled={otp.code.length !== 6 || otp.verifying}
+            className="w-full bg-[#063a47] hover:bg-[#082d36] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors"
+          >
+            {otp.verifying ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Verifying…
+              </>
+            ) : (
+              'Verify & Sign in'
+            )}
+          </button>
+
+          <div className="text-center text-xs text-slate-500 dark:text-slate-400">
+            Didn&apos;t receive it?{' '}
+            <button
+              type="button"
+              onClick={onResend}
+              disabled={otp.cooldown > 0}
+              className="text-[#1a869a] hover:text-[#007b8f] disabled:text-slate-400 disabled:cursor-not-allowed font-semibold"
+            >
+              {otp.cooldown > 0 ? `Resend in ${otp.cooldown}s` : 'Resend code'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
